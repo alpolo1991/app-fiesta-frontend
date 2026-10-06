@@ -4,8 +4,10 @@ Instrucciones para agentes que trabajen en este repositorio.
 
 ## Qué es
 
-Interfaz de la **fiesta empresarial de fin de año** (Cupo $50.000, abono
-mínimo $20.000) con roles ADMIN / MODERADOR / USUARIO. Idioma: español.
+Interfaz de la **fiesta empresarial de fin de año** (inscripción configurable,
+default $50.000, abono mínimo $20.000, máx 1 acompañante) con roles
+ADMIN / MODERADOR / USUARIO. Entregas de combo bloqueadas sin pago confirmado.
+Idioma: español.
 
 ## Stack y estructura
 
@@ -35,6 +37,9 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Tablas → tarjetas apiladas en teléfono (`hidden md:block` / `md:hidden`).
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.
 - Modales con `role="dialog"`, cierre con Escape y clic fuera.
+- Entregas: botones `+1` / `Completar` deshabilitados si rol usuario y
+  `estado_pago !== 'pagado'` (staff exento). Totales siempre desde backend
+  (`monto_abonado + saldo_pendiente`), nunca `50000` fijo.
 - Para probar la UI sin tocar datos reales: backend temporal
   (`FIESTA_DB_PATH`/`FIESTA_UPLOADS_DIR` en `/tmp`, otro puerto) y Vite con
   `VITE_API_TARGET` a ese backend.

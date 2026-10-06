@@ -46,6 +46,9 @@ export default function Entregas({ alCambiar }) {
 
   const stockDe = (inventarioId) => productos.find((p) => p.id === inventarioId)?.cantidad_disponible ?? 0;
 
+  /** Regla estricta: rol usuario exige estado_pago === pagado. Staff exento. */
+  const sinPagoConfirmado = (usuario) => usuario?.rol === 'usuario' && usuario?.estado_pago !== 'pagado';
+
   const filtrados = useMemo(() => {
     const t = busqueda.toLowerCase().trim();
     return usuarios.filter((u) => {
@@ -61,6 +64,7 @@ export default function Entregas({ alCambiar }) {
   /** Entrega unidades de un producto del combo. */
   const entregar = async (usuario, item) => {
     if (item.faltante <= 0) return;
+    if (sinPagoConfirmado(usuario)) return notificar(`${usuario.nombre} no tiene el pago confirmado. Confirma el total antes de entregar.`, 'error');
     if (stockDe(item.inventario_id) <= 0) return notificar(`No queda stock de ${item.producto}.`, 'error');
 
     setOcupado(true);
@@ -82,6 +86,7 @@ export default function Entregas({ alCambiar }) {
   };
 
   const completar = async (usuario) => {
+    if (sinPagoConfirmado(usuario)) return notificar(`${usuario.nombre} no tiene el pago confirmado. Confirma el total antes de completar.`, 'error');
     setOcupado(true);
     try {
       const { data } = await api.post(`/entregas/${usuario.id}/completar`);
@@ -237,27 +242,39 @@ export default function Entregas({ alCambiar }) {
                       <div className="flex flex-wrap justify-end gap-1.5">
                         {(u.combo_items || [])
                           .filter((it) => it.faltante > 0)
-                          .map((it) => (
-                            <button
-                              key={it.inventario_id}
-                              type="button"
-                              className="btn-mini"
-                              disabled={ocupado || stockDe(it.inventario_id) <= 0}
-                              onClick={() => entregar(u, it)}
-                              title={stockDe(it.inventario_id) > 0 ? `Entregar 1 ${it.producto} del combo` : `Sin stock de ${it.producto}`}
-                            >
-                              +1 {it.producto}
-                            </button>
-                          ))}
+                          .map((it) => {
+                            const bloqueado = ocupado || stockDe(it.inventario_id) <= 0 || sinPagoConfirmado(u);
+                            const titulo = sinPagoConfirmado(u)
+                              ? 'Sin pago confirmado: confirma el total antes de entregar'
+                              : stockDe(it.inventario_id) > 0
+                                ? `Entregar 1 ${it.producto} del combo`
+                                : `Sin stock de ${it.producto}`;
+                            return (
+                              <button
+                                key={it.inventario_id}
+                                type="button"
+                                className="btn-mini"
+                                disabled={bloqueado}
+                                onClick={() => entregar(u, it)}
+                                title={titulo}
+                              >
+                                +1 {it.producto}
+                              </button>
+                            );
+                          })}
                         <button
                           type="button"
                           className="btn-mini !border-emerald-400/40 !text-emerald-300"
-                          disabled={ocupado || u.combo_completado}
+                          disabled={ocupado || u.combo_completado || sinPagoConfirmado(u)}
                           onClick={() => completar(u)}
+                          title={sinPagoConfirmado(u) ? 'Sin pago confirmado: confirma el total antes de completar' : 'Marcar combo como completado'}
                         >
                           Completar combo
                         </button>
                       </div>
+                      {sinPagoConfirmado(u) && (
+                        <p className="mt-1 text-right text-[11px] font-semibold text-rose-300">⛔ Sin pago confirmado</p>
+                      )}
                     </td>
                   </tr>
                 );
@@ -330,6 +347,9 @@ export default function Entregas({ alCambiar }) {
                   })}
                 </ul>
                 <div className="flex flex-col gap-1.5">
+                  {sinPagoConfirmado(u) && (
+                    <p className="text-center text-[11px] font-semibold text-rose-300">⛔ Sin pago confirmado: confirma el total antes de entregar</p>
+                  )}
                   {(u.combo_items || [])
                     .filter((it) => it.faltante > 0)
                     .map((it) => (
@@ -337,7 +357,7 @@ export default function Entregas({ alCambiar }) {
                         key={it.inventario_id}
                         type="button"
                         className="btn-mini w-full"
-                        disabled={ocupado || stockDe(it.inventario_id) <= 0}
+                        disabled={ocupado || stockDe(it.inventario_id) <= 0 || sinPagoConfirmado(u)}
                         onClick={() => entregar(u, it)}
                       >
                         +1 {it.producto} ({it.faltante} faltan)
@@ -346,7 +366,7 @@ export default function Entregas({ alCambiar }) {
                   <button
                     type="button"
                     className="btn-mini w-full !border-emerald-400/40 !text-emerald-300"
-                    disabled={ocupado || u.combo_completado}
+                    disabled={ocupado || u.combo_completado || sinPagoConfirmado(u)}
                     onClick={() => completar(u)}
                   >
                     Completar combo

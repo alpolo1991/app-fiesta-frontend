@@ -30,8 +30,6 @@ export default function Perfil() {
     if (usuario?.password_temporal) setModalPassword(true);
   }, [usuario?.password_temporal]);
 
-  const CUPO = 50000;
-
   /** Recarga todo lo que depende del usuario. */
   const recargar = useCallback(async () => {
     if (!usuario) return;
@@ -66,11 +64,13 @@ export default function Perfil() {
 
   const estado = estadoPago(usuario.estado_pago);
   const abonado = Number(usuario.monto_abonado || 0);
-  const saldo = Number(usuario.saldo_pendiente ?? CUPO);
+  const saldo = Number(usuario.saldo_pendiente ?? 50000);
   const montoAcompanantes = Number(acompanantes.total || 0);
   const tieneAcompanante = acompanantes.cantidad > 0;
   const nombresAcompanantes = acompanantes.lista.map((a) => a.nombre).join(', ');
-  const totalAPagar = CUPO + montoAcompanantes;
+  // Total real desde backend (abonado + saldo) para soportar monto configurable.
+  const totalAPagar = abonado + saldo > 0 ? abonado + saldo : 50000 + montoAcompanantes;
+  const CUPO = totalAPagar - montoAcompanantes;
   const progresoPago = Math.min(100, Math.round((abonado / totalAPagar) * 100));
   // Pago total validado: héroe verde colapsable en vez de todo el detalle.
   const pagadoTotal = saldo <= 0 && usuario.estado_pago === 'pagado' && abonado > 0;

@@ -8,6 +8,7 @@ const CLAVES = [
   { clave: 'nombre_moderador', etiqueta: '👤 Nombre del moderador (contacto)', tipo: 'texto' },
   { clave: 'whatsapp_moderador', etiqueta: '📱 WhatsApp del moderador', tipo: 'tel' },
   { clave: 'monto_acompanante', etiqueta: '👥 Monto fijo por acompañante', tipo: 'monto' },
+  { clave: 'monto_inscripcion', etiqueta: '🎟️ Monto de inscripción por usuario', tipo: 'monto' },
   { clave: 'nombre_evento', etiqueta: '🎉 Nombre del evento', tipo: 'texto' },
   { clave: 'lugar_evento', etiqueta: '📍 Lugar del evento', tipo: 'texto' },
   { clave: 'fecha_evento', etiqueta: '📅 Fecha de la fiesta', tipo: 'fecha' },
@@ -43,10 +44,10 @@ export default function ConfigTab() {
   }, [cargar]);
 
   const guardar = async (clave, silencioso) => {
-    if (clave === 'monto_acompanante') {
+    if (clave === 'monto_acompanante' || clave === 'monto_inscripcion') {
       const n = Number(valores[clave]);
       if (isNaN(n) || n <= 0) {
-        if (!silencioso) notificar('El monto del acompañante debe ser mayor a 0.', 'error');
+        if (!silencioso) notificar('El monto debe ser mayor a 0.', 'error');
         return false;
       }
     }
@@ -93,8 +94,8 @@ export default function ConfigTab() {
       <p className="text-sm text-slate-400">
         Contactos y evento para <strong className="text-slate-200">/soporte</strong>,{' '}
         <strong className="text-slate-200">/recuperar</strong> y la{' '}
-        <strong className="text-slate-200">cuenta regresiva</strong> (login + banner). El monto del acompañante se
-        muestra fijo en <strong className="text-slate-200">/encuesta</strong>. Sin fecha no hay cuenta regresiva.
+        <strong className="text-slate-200">cuenta regresiva</strong> (login + banner). Los montos de inscripción y
+        acompañante se aplican a nuevos saldos y acompañantes. Sin fecha no hay cuenta regresiva.
       </p>
 
       <div className="grid gap-3 md:grid-cols-2">

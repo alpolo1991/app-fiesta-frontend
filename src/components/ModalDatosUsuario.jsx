@@ -30,7 +30,8 @@ function mensajeFicha(ficha) {
   const esStaff = u.rol === 'admin' || u.rol === 'moderador';
   const acomp = ficha.acompanantes || { lista: [], cantidad: 0, total: 0 };
   const combo = ficha.combo || { persons: 1, items: [] };
-  const total = esStaff ? 0 : 50000 + Number(acomp.total || 0);
+  // Total real (abonado + saldo) para soportar monto de inscripción configurable.
+  const total = esStaff ? 0 : Number(u.monto_abonado || 0) + Number(u.saldo_pendiente || 0) || 50000 + Number(acomp.total || 0);
   const pendientes = (ficha.soportes || []).filter((s) => s.estado === 'pendiente').length;
   return [
     `FICHA DE USUARIO — ${u.nombre}`,
@@ -115,7 +116,7 @@ export default function ModalDatosUsuario({ usuario, onCerrar }) {
           const est = estadoPago(u.estado_pago);
           const esStaff = u.rol === 'admin' || u.rol === 'moderador';
           const acomp = ficha.acompanantes || { lista: [], cantidad: 0, total: 0 };
-          const total = esStaff ? 0 : 50000 + Number(acomp.total || 0);
+          const total = esStaff ? 0 : Number(u.monto_abonado || 0) + Number(u.saldo_pendiente || 0) || 50000 + Number(acomp.total || 0);
           const abonado = esStaff ? 0 : Number(u.monto_abonado || 0);
           const saldo = esStaff ? 0 : Number(u.saldo_pendiente || 0);
           const progreso = total > 0 ? Math.min(100, Math.round((abonado / total) * 100)) : 100;
@@ -192,7 +193,7 @@ export default function ModalDatosUsuario({ usuario, onCerrar }) {
                   <Fila etiqueta="Cédula" valor={u.cedula} />
                 </Seccion>
 
-                <Seccion titulo={`👥 Acompañantes (${acomp.cantidad}/4)`}>
+                <Seccion titulo={`👥 Acompañantes (${acomp.cantidad}/1)`}>
                   {acomp.cantidad ? (
                     acomp.lista.map((a) => (
                       <Fila key={a.id} etiqueta={a.nombre} valor={dinero(a.monto)} fuerte="font-semibold text-sky-300 tabular-nums" />

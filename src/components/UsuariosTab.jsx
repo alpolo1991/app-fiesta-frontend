@@ -617,7 +617,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
             <div className="grid grid-cols-1 gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center text-sm sm:grid-cols-3">
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-slate-500">Total</p>
-                <p className="font-bold tabular-nums text-white">{dinero(50000 + Number(validar.acompanantes_total ?? validar.total_acompanantes ?? 0))}</p>
+                <p className="font-bold tabular-nums text-white">{dinero(Number(validar.monto_abonado || 0) + Number(validar.saldo_pendiente || 0) || 50000 + Number(validar.acompanantes_total ?? validar.total_acompanantes ?? 0))}</p>
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-slate-500">Abonado</p>
