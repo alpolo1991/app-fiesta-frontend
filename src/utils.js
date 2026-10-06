@@ -53,12 +53,17 @@ export async function copiarTexto(texto) {
   }
 }
 
-/** Fecha legible: 2026-10-04 12:00 → 4 oct 2026, 12:00 */
+/** Fecha legible en hora de Colombia: la BD guarda UTC, se muestra en America/Bogota. */
 export function fechaLegible(valor) {
   if (!valor) return '—';
-  const fecha = new Date(String(valor).replace(' ', 'T'));
+  const texto = String(valor).trim().replace(' ', 'T');
+  // SQLite entrega "YYYY-MM-DD HH:MM:SS" sin zona (UTC): se marca como Z.
+  // Si ya trae zona, se respeta.
+  const conZona = /([Zz]|[+-]\d{2}:?\d{2})$/.test(texto) ? texto : `${texto}Z`;
+  const fecha = new Date(conZona);
   if (isNaN(fecha)) return String(valor);
   return fecha.toLocaleString('es-CO', {
+    timeZone: 'America/Bogota',
     day: '2-digit',
     month: 'short',
     year: 'numeric',
