@@ -5,10 +5,10 @@ import { useToast } from '../context/ToastContext';
 import TarjetaKPI from '../components/TarjetaKPI';
 import { dinero, fechaLegible } from '../utils';
 
-const MAXIMO = 4;
+const MAXIMO = 1;
 
 /**
- * Menú Acompañantes (máx 4 por usuario, precio fijo de administración).
+ * Menú Acompañantes (máx 1 por usuario, precio fijo de administración).
  * - Usuario: registra/elimina los suyos (eliminar solo si aún no está pagado).
  * - Admin/Moderador: ve todos con su usuario y totales.
  */

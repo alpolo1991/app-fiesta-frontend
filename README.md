@@ -1,8 +1,9 @@
 # 🎉 Fiesta Fin de Año 2026 — Frontend
 
-Interfaz de la fiesta empresarial (cupo $50.000, abono mínimo $20.000):
-registro con WhatsApp, pago con soporte en imagen o QR, encuesta,
-acompañantes, entregas de combo y paneles por rol.
+Interfaz de la fiesta empresarial (inscripción configurable por admin, default
+$50.000, abono mínimo $20.000): registro con WhatsApp, pago con soporte en
+imagen o QR, encuesta, 1 acompañante máx, entregas de combo solo con pago
+confirmado y paneles por rol.
 
 > Repo independiente del backend. Despliegue: **Vercel** (`vercel.json`).
 > Toda la interfaz está en **español**.
