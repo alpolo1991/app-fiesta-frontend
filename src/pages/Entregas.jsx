@@ -15,7 +15,8 @@ const ETIQUETA_ROL = { admin: '🛡️ Admin', moderador: '🧑‍⚖️ Moderad
 /**
  * Vista de entregas (admin y moderador).
  * Combo por producto (cerveza, comida, torta, gaseosa × personas).
- * Buscador + entrega por producto + completar combo.
+ * Buscador + entrega por producto. El combo se completa solo al entregar
+ * todo lo requerido (sin botón manual).
  * Al staff se le etiqueta por rol (no pagan suscripción).
  */
 export default function Entregas({ alCambiar }) {
@@ -75,22 +76,7 @@ export default function Entregas({ alCambiar }) {
         cantidad: 1,
         tipo: 'combo',
       });
-      notificar(`${item.producto} entregada a ${usuario.nombre}${data.usuario.combo_completado ? ' · ¡combo completado! 🎉' : ''}`, 'exito');
-      await cargar();
-      alCambiar?.();
-    } catch (error) {
-      notificar(mensajeError(error), 'error');
-    } finally {
-      setOcupado(false);
-    }
-  };
-
-  const completar = async (usuario) => {
-    if (sinPagoConfirmado(usuario)) return notificar(`${usuario.nombre} no tiene el pago confirmado. Confirma el total antes de completar.`, 'error');
-    setOcupado(true);
-    try {
-      const { data } = await api.post(`/entregas/${usuario.id}/completar`);
-      notificar(data.mensaje, 'exito');
+      notificar(`${item.producto} entregada a ${usuario.nombre}${data.usuario.combo_completado ? ' · ¡combo entregado! 🎉' : ''}`, 'exito');
       await cargar();
       alCambiar?.();
     } catch (error) {
@@ -239,6 +225,9 @@ export default function Entregas({ alCambiar }) {
                       )}
                     </td>
                     <td className="td-tabla">
+                      {u.estado_combo === 'completado' ? (
+                        <p className="text-right text-xs font-bold text-emerald-300">✅ Combo entregado</p>
+                      ) : (
                       <div className="flex flex-wrap justify-end gap-1.5">
                         {(u.combo_items || [])
                           .filter((it) => it.faltante > 0)
@@ -262,17 +251,9 @@ export default function Entregas({ alCambiar }) {
                               </button>
                             );
                           })}
-                        <button
-                          type="button"
-                          className="btn-mini !border-emerald-400/40 !text-emerald-300"
-                          disabled={ocupado || u.combo_completado || sinPagoConfirmado(u)}
-                          onClick={() => completar(u)}
-                          title={sinPagoConfirmado(u) ? 'Sin pago confirmado: confirma el total antes de completar' : 'Marcar combo como completado'}
-                        >
-                          Completar combo
-                        </button>
                       </div>
-                      {sinPagoConfirmado(u) && (
+                      )}
+                      {sinPagoConfirmado(u) && u.estado_combo !== 'completado' && (
                         <p className="mt-1 text-right text-[11px] font-semibold text-rose-300">⛔ Sin pago confirmado</p>
                       )}
                     </td>
@@ -347,6 +328,10 @@ export default function Entregas({ alCambiar }) {
                   })}
                 </ul>
                 <div className="flex flex-col gap-1.5">
+                  {u.estado_combo === 'completado' ? (
+                    <p className="text-center text-xs font-bold text-emerald-300">✅ Combo entregado</p>
+                  ) : (
+                  <>
                   {sinPagoConfirmado(u) && (
                     <p className="text-center text-[11px] font-semibold text-rose-300">⛔ Sin pago confirmado: confirma el total antes de entregar</p>
                   )}
@@ -363,14 +348,8 @@ export default function Entregas({ alCambiar }) {
                         +1 {it.producto} ({it.faltante} faltan)
                       </button>
                     ))}
-                  <button
-                    type="button"
-                    className="btn-mini w-full !border-emerald-400/40 !text-emerald-300"
-                    disabled={ocupado || u.combo_completado || sinPagoConfirmado(u)}
-                    onClick={() => completar(u)}
-                  >
-                    Completar combo
-                  </button>
+                  </>
+                  )}
                 </div>
               </article>
             );
