@@ -396,6 +396,11 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
                     <td className="td-tabla">
                       {esStaff ? (
                         <p className="text-xs text-slate-500">$0 · sin saldo a pagar</p>
+                      ) : Number(u.saldo_pendiente || 0) <= 0 && u.estado_pago === 'pagado' ? (
+                        <>
+                          <p className="font-semibold text-emerald-300">✅ Pagado</p>
+                          <p className="text-xs text-emerald-300/70">$0 pendiente</p>
+                        </>
                       ) : (
                         <>
                           <p className="font-semibold text-white">{dinero(u.monto_abonado)} abonado</p>
@@ -464,6 +469,10 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
                   {esStaff ? (
                     <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-bold text-slate-400">
                       Staff sin cargo
+                    </span>
+                  ) : Number(u.saldo_pendiente || 0) <= 0 && u.estado_pago === 'pagado' ? (
+                    <span className="font-semibold text-emerald-300" title={`Pagado total ${dinero(u.monto_abonado)}`}>
+                      ✅ Pagado · $0{u.pago_validado === 1 && ' ✔️'}
                     </span>
                   ) : (
                     <>
