@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api, { mensajeError, obtenerUrlImagen } from '../api/client';
 import CambiarPassword from '../components/CambiarPassword';
@@ -24,6 +24,7 @@ export default function Perfil() {
   const [guardando, setGuardando] = useState(false);
   const [visor, setVisor] = useState(null); // {soporte, url} comprobante propio
   const [verDetallePago, setVerDetallePago] = useState(false);
+  const soportesRef = useRef(null);
 
   // Si la contraseña es temporal, exigir el cambio: abrir el modal automáticamente.
   useEffect(() => {
@@ -73,7 +74,13 @@ export default function Perfil() {
   const CUPO = totalAPagar - montoAcompanantes;
   const progresoPago = Math.min(100, Math.round((abonado / totalAPagar) * 100));
   // Pago total validado: héroe verde colapsable en vez de todo el detalle.
+  // Incluye acompañante porque saldo y estado_pago ya suman todo el total.
   const pagadoTotal = saldo <= 0 && usuario.estado_pago === 'pagado' && abonado > 0;
+  const nAprobados = soportes.filter((s) => s.estado === 'aprobado').length;
+
+  const irAComprobantes = () => {
+    soportesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   // Qué ha reclamado ya el usuario (agrupado por producto)
   const reclamado = (combo?.entregas || []).reduce((acc, e) => {
@@ -320,17 +327,30 @@ export default function Perfil() {
       </div>
 
       {/* ================= Botón grande de pago ================= */}
-      <button type="button" onClick={() => setModalPago(true)} className="btn-grande">
-        💳 {saldo <= 0 ? 'Cupo pagado · ver soportes' : 'Pagar / Abonar'}
-      </button>
+      {pagadoTotal ? (
+        <button
+          type="button"
+          onClick={irAComprobantes}
+          className="btn-exito w-full !rounded-2xl !px-6 !py-4 !text-base"
+          title="Estás al día: ver tus comprobantes aprobados"
+        >
+          ✅ Pagado al día · Ver mis comprobantes ({nAprobados}/{soportes.length})
+        </button>
+      ) : (
+        <button type="button" onClick={() => setModalPago(true)} className="btn-grande" title={tieneAcompanante ? 'Aún debes saldo (incluye acompañante)' : 'Pagar o abonar tu inscripción'}>
+          💳 Pagar / Abonar · saldo {dinero(saldo)}
+        </button>
+      )}
 
       {/* ================= Soportes y perfil ================= */}
       <div className="grid gap-4 lg:grid-cols-3">
         {/* --- Mis soportes --- */}
-        <section className="panela p-5 lg:col-span-2">
+        <section ref={soportesRef} className="panela scroll-mt-24 p-5 lg:col-span-2">
           <header className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">🧾 Mis soportes de pago</h2>
-            <span className="text-xs text-slate-500">{soportes.length} enviado(s)</span>
+            <span className="text-xs text-slate-500">
+              {soportes.length} enviado(s){pagadoTotal ? ` · ${nAprobados} aprobado(s) ✅` : ''}
+            </span>
           </header>
 
           {soportes.length === 0 ? (
