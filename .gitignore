@@ -1,0 +1,16 @@
+# Dependencias
+node_modules/
+
+# Build de producción (lo genera Vercel)
+dist/
+
+# Entorno local de Vite
+.env
+.env.local
+.env.*.local
+
+# Logs y sistema
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
