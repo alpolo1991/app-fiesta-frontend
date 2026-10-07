@@ -66,7 +66,7 @@ export default function Moderador() {
           subtitulo={`${r.equipo?.admins ?? 0} admin · ${r.equipo?.moderadores ?? 0} mod`}
           color="cielo"
         />
-        <TarjetaKPI titulo="Pagados" icono="✅" valor={cargando ? '…' : per.pagados ?? 0} subtitulo={`${r.ganancias?.inscripcionesConfirmadas ?? 0} confirmadas · ${r.ganancias?.acompanantesConfirmados ?? 0} acompañante(s)`} color="esmeralda" />
+        <TarjetaKPI titulo="Pagados" icono="✅" valor={cargando ? '…' : (r.ganancias?.inscripcionesConfirmadas ?? 0) + (r.ganancias?.acompanantesConfirmados ?? 0)} subtitulo={`${r.ganancias?.inscripcionesConfirmadas ?? 0} usuarios + ${r.ganancias?.acompanantesConfirmados ?? 0} acompañante(s) confirmados`} color="esmeralda" />
         <TarjetaKPI titulo="Abonos" icono="🟡" valor={cargando ? '…' : per.abonados ?? 0} subtitulo="con abono parcial" color="oro" />
         <TarjetaKPI
           titulo="Soportes"
