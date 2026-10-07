@@ -102,7 +102,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
     }
   };
 
-  /** Botones de fila: en tabla van en caja interna; en tarjeta móvil a ancho completo. */
+  /** Botones de fila: en tabla solo icono (no rompe el layout); en móvil texto completo. */
   const Botones = ({ u, esStaffFila, vertical }) => (
     <div className={vertical ? 'flex flex-col gap-1.5' : 'acciones-tabla'}>
       <button
@@ -112,7 +112,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
         title="Ver ficha completa del usuario"
         aria-label={`Ver ficha de ${u.nombre}`}
       >
-        👁 Ficha
+        👁{vertical ? ' Ficha' : ''}
       </button>
       <button
         type="button"
@@ -122,7 +122,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
         title="Genera una contraseña temporal nueva"
         aria-label={`Resetear contraseña de ${u.nombre}`}
       >
-        🔑 Reset
+        🔑{vertical ? ' Reset' : ''}
       </button>
       {esAdmin && (
         <>
@@ -133,7 +133,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
             title="Editar nombre, cédula, email y WhatsApp"
             aria-label={`Editar datos de ${u.nombre}`}
           >
-            ✏️ Editar
+            ✏️{vertical ? ' Editar' : ''}
           </button>
           {!esStaffFila && (
             <button
@@ -141,8 +141,9 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
               className={`btn-mini${vertical ? ' w-full' : ''}`}
               onClick={() => abrirValidar(u)}
               title="Validar pago, aprobar soportes, abonar o marcar pago completo"
+              aria-label={`Validar pago de ${u.nombre}`}
             >
-              💳 {u.pago_validado ? 'Validado' : 'Validar / Abono'}
+              💳{vertical ? ` ${u.pago_validado ? 'Validado' : 'Validar / Abono'}` : ''}
             </button>
           )}
           <button
@@ -150,9 +151,10 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
             className={`btn-mini !text-rose-300${vertical ? ' w-full' : ''}`}
             onClick={() => eliminar(u)}
             disabled={u.id === yo?.id}
+            title="Eliminar usuario"
             aria-label={`Eliminar a ${u.nombre}`}
           >
-            🗑 Eliminar
+            🗑{vertical ? ' Eliminar' : ''}
           </button>
         </>
       )}
