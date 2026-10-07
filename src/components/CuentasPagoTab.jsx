@@ -26,7 +26,7 @@ export default function CuentasPagoTab() {
       ]);
       setCuentas(data);
       const n = Number(cfg.data?.tamano_max_imagen_mb);
-      if (!isNaN(n) && n >= 0.5 && n <= 3) setMaxMB(n);
+      if (!isNaN(n) && n > 0 && n <= 3) setMaxMB(n);
     } catch (error) {
       notificar(mensajeError(error), 'error');
     } finally {

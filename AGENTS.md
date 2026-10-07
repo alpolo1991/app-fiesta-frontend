@@ -50,7 +50,7 @@ npm run build   # genera dist/ (debe salir exit 0)
   (`✅ Pagado · $0`).
 - Fechas: `fechaLegible()` interpreta la BD (UTC) y muestra
   `America/Bogota`.
-- Imágenes: el límite lo define el admin (`tamano_max_imagen_mb` 0.5–3);
+- Imágenes: el límite lo define el admin (`tamano_max_imagen_mb`, hasta 3 MB);
   `ModalPago` y QR lo leen de `/configuracion` (default 1 MB).
 - Para probar la UI sin tocar datos reales: backend temporal
   (`FIESTA_DB_PATH`/`FIESTA_UPLOADS_DIR` en `/tmp`, otro puerto) y Vite con

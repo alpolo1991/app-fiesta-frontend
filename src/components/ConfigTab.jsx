@@ -9,7 +9,7 @@ const CLAVES = [
   { clave: 'whatsapp_moderador', etiqueta: '📱 WhatsApp del moderador', tipo: 'tel' },
   { clave: 'monto_acompanante', etiqueta: '👥 Monto fijo por acompañante', tipo: 'monto' },
   { clave: 'monto_inscripcion', etiqueta: '🎟️ Monto de inscripción por usuario', tipo: 'monto' },
-  { clave: 'tamano_max_imagen_mb', etiqueta: '🖼️ Tamaño máx de imagen (MB, 0.5–3)', tipo: 'decimal' },
+  { clave: 'tamano_max_imagen_mb', etiqueta: '🖼️ Tamaño máx de imagen (MB, hasta 3)', tipo: 'decimal' },
   { clave: 'nombre_evento', etiqueta: '🎉 Nombre del evento', tipo: 'texto' },
   { clave: 'lugar_evento', etiqueta: '📍 Lugar del evento', tipo: 'texto' },
   { clave: 'fecha_evento', etiqueta: '📅 Fecha de la fiesta', tipo: 'fecha' },
@@ -54,8 +54,8 @@ export default function ConfigTab() {
     }
     if (clave === 'tamano_max_imagen_mb') {
       const n = Number(valores[clave]);
-      if (isNaN(n) || n < 0.5 || n > 3) {
-        if (!silencioso) notificar('El tamaño debe estar entre 0.5 y 3 MB.', 'error');
+      if (isNaN(n) || n <= 0 || n > 3) {
+        if (!silencioso) notificar('El tamaño debe ser mayor a 0 y hasta 3 MB.', 'error');
         return false;
       }
     }
@@ -114,9 +114,9 @@ export default function ConfigTab() {
               <input
                 type={TIPO_INPUT[c.tipo] || 'text'}
                 className="campo"
-                min={c.tipo === 'monto' ? 1000 : c.tipo === 'decimal' ? 0.5 : undefined}
+                min={c.tipo === 'monto' ? 1000 : c.tipo === 'decimal' ? 0.1 : undefined}
                 max={c.tipo === 'decimal' ? 3 : undefined}
-                step={c.tipo === 'monto' ? 1000 : c.tipo === 'decimal' ? 0.5 : undefined}
+                step={c.tipo === 'monto' ? 1000 : c.tipo === 'decimal' ? 0.1 : undefined}
                 maxLength={c.tipo === 'tel' ? 15 : c.clave.startsWith('nombre_') ? 80 : undefined}
                 value={valores[c.clave] ?? ''}
                 onChange={(e) => setValores((v) => ({ ...v, [c.clave]: e.target.value }))}
