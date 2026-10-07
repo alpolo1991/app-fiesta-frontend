@@ -79,7 +79,7 @@ export default function Login() {
             🎉
           </span>
           <h2 className="text-xl font-bold text-white">Iniciar sesión</h2>
-          <p className="mt-1 text-sm text-slate-400">Ingresa con tu correo de la empresa</p>
+          <p className="mt-1 text-sm text-slate-400">Ingresa con tu correo registrado</p>
         </div>
 
         <form onSubmit={enviar} className="space-y-4">
@@ -91,7 +91,7 @@ export default function Login() {
               id="email"
               type="email"
               className="campo"
-              placeholder="tu.correo@empresa.com"
+              placeholder="tu.correo@dominio.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               maxLength={120}

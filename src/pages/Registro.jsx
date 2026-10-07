@@ -94,7 +94,7 @@ export default function Registro() {
                 className="campo"
                 value={form.email}
                 onChange={cambiar('email')}
-                placeholder="tu.correo@empresa.com"
+                placeholder="tu.correo@dominio.com"
                 maxLength={120}
                 required
                 autoComplete="email"
