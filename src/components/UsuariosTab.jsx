@@ -102,9 +102,9 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
     }
   };
 
-  /** Botones de fila: en tabla van en línea; en tarjeta móvil a ancho completo. */
+  /** Botones de fila: en tabla van en caja interna; en tarjeta móvil a ancho completo. */
   const Botones = ({ u, esStaffFila, vertical }) => (
-    <div className={`flex gap-1.5 ${vertical ? 'flex-col' : 'flex-wrap justify-end'}`}>
+    <div className={vertical ? 'flex flex-col gap-1.5' : 'acciones-tabla'}>
       <button
         type="button"
         className={`btn-mini${vertical ? ' w-full' : ''}`}
@@ -418,7 +418,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
                         </span>
                       )}
                     </td>
-                    <td className="td-tabla">
+                    <td className="td-tabla td-acciones">
                       <Botones u={u} esStaffFila={esStaff} vertical={false} />
                     </td>
                   </tr>
