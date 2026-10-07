@@ -14,12 +14,19 @@ export default function CuentasPagoTab() {
   const [cargando, setCargando] = useState(true);
   const [guardandoId, setGuardandoId] = useState(null);
   const [qrUrls, setQrUrls] = useState({}); // {cuenta_id: objectURL}
+  // Tamaño máx configurado por el admin (MB, default 1).
+  const [maxMB, setMaxMB] = useState(1);
 
   const cargar = useCallback(async () => {
     setCargando(true);
     try {
-      const { data } = await api.get('/cuentas-pago', { params: { todas: 1 } });
+      const [{ data }, cfg] = await Promise.all([
+        api.get('/cuentas-pago', { params: { todas: 1 } }),
+        api.get('/configuracion').catch(() => ({ data: {} })),
+      ]);
       setCuentas(data);
+      const n = Number(cfg.data?.tamano_max_imagen_mb);
+      if (!isNaN(n) && n >= 0.5 && n <= 3) setMaxMB(n);
     } catch (error) {
       notificar(mensajeError(error), 'error');
     } finally {
@@ -53,13 +60,13 @@ export default function CuentasPagoTab() {
     }
   };
 
-  /** Sube o cambia el QR de una cuenta (jpg/png/webp, máx 1 MB). */
+  /** Sube o cambia el QR de una cuenta (jpg/png/webp, tamaño configurable). */
   const subirQr = async (cuenta, file) => {
     if (!file) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
       return notificar('Solo se permiten imágenes (jpg, png, webp).', 'error');
     }
-    if (file.size > 1024 * 1024) return notificar('El QR supera el máximo de 1 MB.', 'error');
+    if (file.size > maxMB * 1024 * 1024) return notificar(`El QR supera el máximo de ${maxMB} MB.`, 'error');
     const datos = new FormData();
     datos.append('archivo', file);
     setGuardandoId(cuenta.id);
