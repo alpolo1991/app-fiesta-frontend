@@ -4,7 +4,6 @@ import { useToast } from '../context/ToastContext';
 import { CUENTAS_TIPO, copiarTexto, dinero } from '../utils';
 import Modal from './Modal';
 
-const MAX_ARCHIVO = 1024 * 1024; // 1 MB
 const MIME_VALIDOS = ['image/jpeg', 'image/png', 'image/webp'];
 
 /**
@@ -20,6 +19,10 @@ export default function ModalPago({ abierto, onCerrar, usuario, onEnviado }) {
   const [cargando, setCargando] = useState(false);
   const [cuentasListas, setCuentasListas] = useState(false);
   const [qrUrls, setQrUrls] = useState({}); // {cuenta_id: objectURL}
+  // Tamaño máx configurado por el admin (MB, default 1).
+  const [maxMB, setMaxMB] = useState(1);
+  const maxArchivo = maxMB * 1024 * 1024;
+  const etiquetaMax = `${maxMB} MB`;
 
   const saldo = Number(usuario?.saldo_pendiente ?? 0);
   const yaPagado = saldo <= 0;
@@ -39,6 +42,13 @@ export default function ModalPago({ abierto, onCerrar, usuario, onEnviado }) {
       .then((r) => setCuentas(r.data))
       .catch(() => notificar('No se pudieron cargar las cuentas de pago.', 'error'))
       .finally(() => setCuentasListas(true));
+    api
+      .get('/configuracion')
+      .then((r) => {
+        const n = Number(r.data?.tamano_max_imagen_mb);
+        if (!isNaN(n) && n >= 0.5 && n <= 3) setMaxMB(n);
+      })
+      .catch(() => {});
   }, [abierto, notificar]);
 
   // Al elegir "pago total" el monto es exactamente el saldo
@@ -81,9 +91,9 @@ export default function ModalPago({ abierto, onCerrar, usuario, onEnviado }) {
       e.target.value = '';
       return notificar('Solo se permiten imágenes (jpg, png, webp).', 'error');
     }
-    if (file.size > MAX_ARCHIVO) {
+    if (file.size > maxArchivo) {
       e.target.value = '';
-      return notificar('La imagen supera el máximo de 1 MB.', 'error');
+      return notificar(`La imagen supera el máximo de ${etiquetaMax}.`, 'error');
     }
     setArchivo(file);
   };
@@ -198,7 +208,7 @@ export default function ModalPago({ abierto, onCerrar, usuario, onEnviado }) {
           </div>
 
           <div>
-            <label className="etiqueta">Imagen del soporte (jpg, png o webp · máx 1 MB)</label>
+              <label className="etiqueta">Imagen del soporte (jpg, png o webp · máx {etiquetaMax})</label>
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
