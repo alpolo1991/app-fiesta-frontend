@@ -113,8 +113,8 @@ export default function Admin() {
         <TarjetaKPI
           titulo="Pagados"
           icono="✅"
-          valor={cargando ? '…' : per.pagados ?? 0}
-          subtitulo={`${r.ganancias?.inscripcionesConfirmadas ?? 0} confirmadas · ${r.ganancias?.acompanantesConfirmados ?? 0} acompañante(s)`}
+          valor={cargando ? '…' : (r.ganancias?.inscripcionesConfirmadas ?? 0) + (r.ganancias?.acompanantesConfirmados ?? 0)}
+          subtitulo={`${r.ganancias?.inscripcionesConfirmadas ?? 0} usuarios + ${r.ganancias?.acompanantesConfirmados ?? 0} acompañante(s) confirmados`}
           color="esmeralda"
         />
         <TarjetaKPI
