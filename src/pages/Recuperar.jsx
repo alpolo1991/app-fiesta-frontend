@@ -102,7 +102,7 @@ export default function Recuperar() {
                 className="campo"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu.correo@empresa.com"
+                placeholder="tu.correo@dominio.com"
                 required
                 autoFocus
               />
