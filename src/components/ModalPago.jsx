@@ -46,7 +46,7 @@ export default function ModalPago({ abierto, onCerrar, usuario, onEnviado }) {
       .get('/configuracion')
       .then((r) => {
         const n = Number(r.data?.tamano_max_imagen_mb);
-        if (!isNaN(n) && n >= 0.5 && n <= 3) setMaxMB(n);
+        if (!isNaN(n) && n > 0 && n <= 3) setMaxMB(n);
       })
       .catch(() => {});
   }, [abierto, notificar]);
