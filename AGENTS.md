@@ -35,11 +35,21 @@ npm run build   # genera dist/ (debe salir exit 0)
   Tailwind fuera de ese lenguaje.
 - Botones: compactos en compu, 44px en táctil (`pointer: coarse` en CSS).
 - Tablas → tarjetas apiladas en teléfono (`hidden md:block` / `md:hidden`).
+- Acciones en tablas: caja `.acciones-tabla` en `td.td-acciones`; en tabla
+  solo icono (con `title` + `aria-label`), en tarjeta móvil texto completo.
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.
 - Modales con `role="dialog"`, cierre con Escape y clic fuera.
-- Entregas: botones `+1` / `Completar` deshabilitados si rol usuario y
-  `estado_pago !== 'pagado'` (staff exento). Totales siempre desde backend
-  (`monto_abonado + saldo_pendiente`), nunca `50000` fijo.
+- Entregas: botones `+1` deshabilitados si rol usuario y
+  `estado_pago !== 'pagado'` (staff exento); sin botón manual (el combo se
+  auto-completa al entregar todo y muestra `✅ Combo entregado`). Totales
+  siempre desde backend (`monto_abonado + saldo_pendiente`), nunca `50000` fijo.
+- KPI Pagados (admin/mod): total personas confirmadas =
+  `ganancias.inscripcionesConfirmadas + ganancias.acompanantesConfirmados`.
+- Perfil: si `pagadoTotal` botón verde `btn-exito` con conteo y scroll a
+  comprobantes; si debe, botón dorado con saldo. Usuarios pagados en verde
+  (`✅ Pagado · $0`).
+- Fechas: `fechaLegible()` interpreta la BD (UTC) y muestra
+  `America/Bogota`.
 - Para probar la UI sin tocar datos reales: backend temporal
   (`FIESTA_DB_PATH`/`FIESTA_UPLOADS_DIR` en `/tmp`, otro puerto) y Vite con
   `VITE_API_TARGET` a ese backend.
