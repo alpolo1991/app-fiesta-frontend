@@ -150,8 +150,8 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
             type="button"
             className={`btn-mini !text-rose-300${vertical ? ' w-full' : ''}`}
             onClick={() => eliminar(u)}
-            disabled={u.id === yo?.id}
-            title="Eliminar usuario"
+            disabled={u.id === yo?.id || Number(u.monto_abonado || 0) > 0}
+            title={Number(u.monto_abonado || 0) > 0 ? 'Tiene pagos registrados: no se puede eliminar' : 'Eliminar usuario'}
             aria-label={`Eliminar a ${u.nombre}`}
           >
             🗑{vertical ? ' Eliminar' : ''}
