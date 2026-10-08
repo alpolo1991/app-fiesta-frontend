@@ -35,7 +35,7 @@ function mensajeFicha(ficha, config = {}) {
   const pendientes = (ficha.soportes || []).filter((s) => s.estado === 'pendiente').length;
   return [
     `FICHA DE USUARIO — ${u.nombre}`,
-    `Cédula: ${u.cedula} · Email: ${u.email} · WhatsApp: ${u.whatsapp || 'sin registrar'}`,
+    `Cédula: ${u.cedula} · Email: ${u.email || 'oculto'} · WhatsApp: ${u.whatsapp || 'sin registrar'}`,
     `Rol: ${ROTULOS[u.rol] || u.rol}${esStaff ? ' (sin saldo a pagar)' : ''}`,
     `Pago: ${esStaff ? 'Staff sin cargo' : `${est.texto}${u.pago_validado ? ' (validado)' : ' (sin validar)'}`} · Abonado: ${dinero(esStaff ? 0 : u.monto_abonado)} · Total: ${dinero(total)} · Saldo: ${dinero(esStaff ? 0 : u.saldo_pendiente)}`,
     acomp.cantidad
@@ -138,7 +138,7 @@ export default function ModalDatosUsuario({ usuario, onCerrar }) {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-display text-lg font-extrabold text-white">{u.nombre}</p>
                   <p className="truncate text-xs text-slate-400">
-                    Cédula {u.cedula} · {u.email}
+                    Cédula {u.cedula} · {u.email || '—'}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -196,7 +196,7 @@ export default function ModalDatosUsuario({ usuario, onCerrar }) {
               <div className="grid gap-3 md:grid-cols-2">
                 <Seccion titulo="📞 Contacto">
                   <Fila etiqueta="WhatsApp" valor={u.whatsapp || '—'} />
-                  <Fila etiqueta="Email" valor={u.email} />
+                  <Fila etiqueta="Email" valor={u.email || '—'} />
                   <Fila etiqueta="Cédula" valor={u.cedula} />
                   <Fila etiqueta="UUID" valor={u.uuid || '—'} />
                 </Seccion>
