@@ -14,7 +14,7 @@ const ETIQUETA_ROL = { admin: '🛡️ Admin', moderador: '🧑‍⚖️ Moderad
 
 /**
  * Vista de entregas (admin y moderador).
- * Combo por producto (cerveza, comida, torta, gaseosa × personas).
+ * Combo por producto (cerveza ×4 y comida ×1 por persona).
  * Buscador + entrega por producto. El combo se completa solo al entregar
  * todo lo requerido (sin botón manual).
  * Al staff se le etiqueta por rol (no pagan suscripción).
