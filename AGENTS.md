@@ -50,6 +50,9 @@ npm run build   # genera dist/ (debe salir exit 0)
   (`✅ Pagado · $0`); Eliminar deshabilitado con pagos registrados.
 - Fechas: `fechaLegible()` interpreta la BD (UTC) y muestra
   `America/Bogota`.
+- WhatsApp: todo mensaje lleva el bloque de `bloqueEventoWhatsApp()`
+  (nombre, dirección, fecha/hora y enlace); la dirección sale de
+  `lugar_evento` en Configuración.
 - Imágenes: el límite lo define el admin (`tamano_max_imagen_mb`, hasta 3 MB);
   `ModalPago` y QR lo leen de `/configuracion` (default 1 MB).
 - Para probar la UI sin tocar datos reales: backend temporal

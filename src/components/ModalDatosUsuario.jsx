@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api, { mensajeError } from '../api/client';
 import { useToast } from '../context/ToastContext';
-import { ESTADOS_SOPORTE, copiarTexto, dinero, estadoPago, fechaLegible } from '../utils';
+import { ESTADOS_SOPORTE, copiarTexto, dinero, estadoPago, fechaLegible, bloqueEventoWhatsApp } from '../utils';
 import Modal from './Modal';
 
 const ROTULOS = { admin: 'Administrador', moderador: 'Moderador', usuario: 'Usuario' };
@@ -24,7 +24,7 @@ function numeroWhatsApp(valor) {
 }
 
 /** Texto formal para copiar / enviar por WhatsApp (no es chat, es ficha). */
-function mensajeFicha(ficha) {
+function mensajeFicha(ficha, config = {}) {
   const u = ficha.usuario;
   const est = estadoPago(u.estado_pago);
   const esStaff = u.rol === 'admin' || u.rol === 'moderador';
@@ -43,6 +43,8 @@ function mensajeFicha(ficha) {
       : 'Acompañantes: ninguno',
     `Combo (${combo.persons} persona(s)): ${(combo.items || []).map((i) => `${i.entregado}/${i.requerido} ${i.producto}`).join(' · ') || 'sin definir'}${u.combo_completado ? ' (completado)' : ''}`,
     `Encuesta: ${ficha.encuesta.completada ? `respondida el ${fechaLegible(ficha.encuesta.completada_en)}` : 'pendiente'} · Soportes: ${(ficha.soportes || []).length} (${pendientes} pendientes)`,
+    '',
+    bloqueEventoWhatsApp(config),
   ].join('\n');
 }
 
@@ -77,6 +79,7 @@ export default function ModalDatosUsuario({ usuario, onCerrar }) {
   const { notificar } = useToast();
   const [ficha, setFicha] = useState(null);
   const [cargando, setCargando] = useState(false);
+  const [config, setConfig] = useState({});
 
   useEffect(() => {
     if (!usuario?.id) {
@@ -90,13 +93,17 @@ export default function ModalDatosUsuario({ usuario, onCerrar }) {
       .then((r) => vivo && setFicha(r.data))
       .catch((e) => notificar(mensajeError(e, 'No se pudo cargar la ficha.'), 'error'))
       .finally(() => vivo && setCargando(false));
+    api
+      .get('/configuracion')
+      .then((r) => vivo && setConfig(r.data || {}))
+      .catch(() => {});
     return () => {
       vivo = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usuario?.id]);
 
-  const mensaje = ficha ? mensajeFicha(ficha) : '';
+  const mensaje = ficha ? mensajeFicha(ficha, config) : '';
   const numero = ficha ? numeroWhatsApp(ficha.usuario.whatsapp) : '';
 
   const copiar = async () => {

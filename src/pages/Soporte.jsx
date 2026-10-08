@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
+import { bloqueEventoWhatsApp } from '../utils';
 
 /**
  * Página de soporte (versión simple, SIN tickets de soporte - fase 2).
@@ -32,7 +33,9 @@ export default function Soporte() {
   const waModCorto = config.whatsapp_moderador || '3133506369';
   const nombreAdmin = config.nombre_admin || 'Administrador';
   const nombreMod = config.nombre_moderador || 'Moderador';
-  const texto = encodeURIComponent('Hola, necesito ayuda con la Fiesta Fin de Año 2026.');
+  const texto = encodeURIComponent(
+    `Hola, necesito ayuda con la Fiesta Fin de Año 2026.\n\n${bloqueEventoWhatsApp(config)}`
+  );
 
   // Contactos dinámicos del staff; si aún cargan o no hay, se usan los de configuración.
   const tarjetas =
