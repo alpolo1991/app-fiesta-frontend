@@ -89,6 +89,20 @@ export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
               Clave temporal · deberá cambiarla al ingresar ·{" "}
               <span className="tabular-nums">saldo {dinero(creado.usuario.saldo_pendiente)}</span> · solo se muestra una vez
             </p>
+            <p className="mt-2 flex items-center justify-center gap-2 text-[11px] text-slate-500">
+              <span className="font-mono tabular-nums">UUID {creado.usuario.uuid}</span>
+              <button
+                type="button"
+                className="btn-mini !min-h-0 !px-2 !py-1"
+                onClick={async () => {
+                  const ok = await copiarTexto(creado.usuario.uuid);
+                  notificar(ok ? 'UUID copiado.' : 'No se pudo copiar.', ok ? 'exito' : 'error');
+                }}
+                title="Copiar UUID"
+              >
+                📋
+              </button>
+            </p>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
             <button
