@@ -6,6 +6,7 @@ import { copiarTexto, dinero, estadoPago, ESTADOS_SOPORTE, fechaLegible, bloqueE
 import Modal from './Modal';
 import ModalDatosUsuario from './ModalDatosUsuario';
 import ModalRegistrarUsuario from './ModalRegistrarUsuario';
+import ModalSubirSoporte from './ModalSubirSoporte';
 
 /** Número colombiano normalizado para wa.me (ej: 3133506369 → 573133506369). */
 function numeroWhatsApp(valor) {
@@ -40,6 +41,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
   const [ocupado, setOcupado] = useState(false);
   const [config, setConfig] = useState({});
   const [registrando, setRegistrando] = useState(false);
+  const [subirPara, setSubirPara] = useState(null); // usuario al que se le sube soporte
 
   const esAdmin = modo === 'admin';
 
@@ -131,6 +133,17 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
       >
         🔑{vertical ? ' Reset' : ''}
       </button>
+      {!esStaffFila && (
+        <button
+          type="button"
+          className={`btn-mini${vertical ? ' w-full' : ''}`}
+          onClick={() => setSubirPara(u)}
+          title={`Subir soporte de pago por ${u.nombre} (queda pendiente igual)`}
+          aria-label={`Subir soporte por ${u.nombre}`}
+        >
+          📤{vertical ? ' Subir soporte' : ''}
+        </button>
+      )}
       {esAdmin && (
         <>
           <button
@@ -528,6 +541,18 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
         }}
       />
 
+      {/* ============ Modal: subir soporte por el usuario ============ */}
+      <ModalSubirSoporte
+        usuario={subirPara}
+        abierto={!!subirPara}
+        onCerrar={() => setSubirPara(null)}
+        onEnviado={() => {
+          cargar();
+          alCambiar?.();
+          if (validar) abrirValidar(validar);
+        }}
+      />
+
       {/* ============ Modal: contraseña temporal ============ */}
       <Modal abierto={!!reset} titulo="Contraseña temporal generada" onCerrar={() => setReset(null)}>
         {reset && (
@@ -697,9 +722,19 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
 
             {/* Soportes reportados: aprobar según lo recibido */}
             <div className="space-y-2 border-t border-white/10 pt-3">
-              <h4 className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                🧾 Soportes reportados
-              </h4>
+              <div className="flex items-center justify-between gap-2">
+                <h4 className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                  🧾 Soportes reportados
+                </h4>
+                <button
+                  type="button"
+                  className="btn-mini"
+                  onClick={() => setSubirPara(validar)}
+                  title={`Subir soporte por ${validar?.nombre} (queda pendiente igual)`}
+                >
+                  📤 Subir soporte
+                </button>
+              </div>
               {cargSopVal ? (
                 <p className="text-xs text-slate-500">Cargando soportes…</p>
               ) : soportesVal.length === 0 ? (
