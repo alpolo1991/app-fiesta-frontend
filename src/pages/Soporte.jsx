@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
+import AvisoPagos from '../components/AvisoPagos';
 import { bloqueEventoWhatsApp } from '../utils';
 
 /**
@@ -72,6 +73,12 @@ export default function Soporte() {
         <h1 className="text-2xl font-extrabold text-white">Ayuda y soporte</h1>
         <p className="mt-1 text-sm text-slate-400">Estamos a un mensaje de distancia</p>
       </div>
+
+      {(config.fecha_abono || config.fecha_limite_pago) && (
+        <div className="mb-6">
+          <AvisoPagos config={config} />
+        </div>
+      )}
 
       {/* Botones grandes de WhatsApp (staff real o configuración) */}
       <div className="grid gap-4 sm:grid-cols-2">

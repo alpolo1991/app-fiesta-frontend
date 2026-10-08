@@ -4,6 +4,7 @@ import api, { mensajeError } from '../api/client';
 import { PANEL_POR_ROL, useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import CuentaRegresiva from '../components/CuentaRegresiva';
+import AvisoPagos from '../components/AvisoPagos';
 
 export default function Login() {
   const { iniciarSesion, usuario } = useAuth();
@@ -73,6 +74,7 @@ export default function Login() {
       {/* ---- Formulario ---- */}
       <div className="mx-auto w-full max-w-md space-y-4">
         <CuentaRegresiva fecha={config.fecha_evento} hora={config.hora_evento} nombre={config.nombre_evento} />
+        <AvisoPagos config={config} />
         <div className="panela p-6 sm:p-8">
         <div className="mb-6 text-center">
           <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-fuchsia-500 text-2xl">
