@@ -11,18 +11,17 @@ function numeroWhatsApp(valor) {
   return d.startsWith('57') && d.length >= 12 ? d : `57${d}`;
 }
 
-const VACIO = { nombre: '', cedula: '', email: '', whatsapp: '', password: '', confirmar: '' };
+const VACIO = { nombre: '', cedula: '', email: '', whatsapp: '' };
 
 /**
  * Registro manual de usuarios (admin y moderador).
- * Mismos campos y validaciones que el registro público; el creado queda
- * con clave temporal (debe cambiarla al ingresar). Al crear muestra las
- * credenciales una sola vez para compartirlas por WhatsApp.
+ * Mismos datos que el registro público, sin pedir clave: el backend genera
+ * una temporal (debe cambiarla al ingresar). Al crear muestra la clave una
+ * sola vez para compartirla por WhatsApp.
  */
 export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
   const { notificar } = useToast();
   const [form, setForm] = useState(VACIO);
-  const [verClave, setVerClave] = useState(false);
   const [ocupado, setOcupado] = useState(false);
   const [creado, setCreado] = useState(null); // {usuario, password}
   const [config, setConfig] = useState({});
@@ -31,7 +30,6 @@ export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
     if (!abierto) return;
     setForm(VACIO);
     setCreado(null);
-    setVerClave(false);
     api
       .get('/configuracion')
       .then((r) => setConfig(r.data || {}))
@@ -52,9 +50,6 @@ export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
     if (!/^\d{6,12}$/.test(ced)) return notificar('La cédula debe tener solo dígitos (6 a 12).', 'error');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return notificar('El email no es válido.', 'error');
     if (!/^\d{7,15}$/.test(w)) return notificar('El WhatsApp es (OBLIGATORIO): solo dígitos (7 a 15).', 'error');
-    if (form.password.length < 6 || form.password.length > 72)
-      return notificar('La contraseña debe tener entre 6 y 72 caracteres.', 'error');
-    if (form.password !== form.confirmar) return notificar('Las contraseñas no coinciden.', 'error');
 
     setOcupado(true);
     try {
@@ -63,7 +58,6 @@ export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
         cedula: ced,
         email: mail,
         whatsapp: w,
-        password: form.password,
       });
       notificar(data.mensaje, 'exito');
       setCreado({ usuario: data.usuario, password: data.password_temporal });
@@ -191,38 +185,9 @@ export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
               required
             />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="etiqueta">Contraseña</label>
-              <input
-                type={verClave ? 'text' : 'password'}
-                className="campo"
-                value={form.password}
-                onChange={cambiar('password')}
-                minLength={6}
-                maxLength={72}
-                required
-                autoComplete="new-password"
-              />
-            </div>
-            <div>
-              <label className="etiqueta">Confirmar contraseña</label>
-              <input
-                type={verClave ? 'text' : 'password'}
-                className="campo"
-                value={form.confirmar}
-                onChange={cambiar('confirmar')}
-                minLength={6}
-                maxLength={72}
-                required
-                autoComplete="new-password"
-              />
-            </div>
-          </div>
-          <label className="flex cursor-pointer items-center gap-2 text-xs text-slate-400">
-            <input type="checkbox" className="accent-amber-400" checked={verClave} onChange={(e) => setVerClave(e.target.checked)} />
-            Mostrar contraseñas
-          </label>
+          <p className="mt-1 text-[11px] text-slate-500">
+            Se genera una clave temporal: deberá cambiarla al ingresar.
+          </p>
           <div className="flex flex-wrap justify-end gap-2">
             <button type="button" className="btn-fantasma" onClick={onCerrar}>
               Cancelar

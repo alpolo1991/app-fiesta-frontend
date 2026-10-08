@@ -38,7 +38,8 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Acciones en tablas: caja `.acciones-tabla` en `td.td-acciones`; en tabla
   solo icono (con `title` + `aria-label`), en tarjeta móvil texto completo.
 - Registro manual: `ModalRegistrarUsuario` en Usuarios (admin y mod), mismos
-  campos que el registro público; WhatsApp siempre `(OBLIGATORIO)`.
+  datos que el registro público sin pedir clave (genera temporal);
+  WhatsApp siempre `(OBLIGATORIO)`.
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.
 - Modales con `role="dialog"`, cierre con Escape y clic fuera.
 - Entregas: botones `+1` deshabilitados si rol usuario y
