@@ -256,7 +256,7 @@ export default function Inventario({ alCambiar }) {
           titulo="Stock combo"
           icono="🎁"
           valor={unidadesCombo}
-          subtitulo={`${combo.length} producto(s) · 3 cervezas + 1 comida`}
+          subtitulo={`${combo.length} producto(s) · 4 cervezas + 1 comida`}
           color="oro"
         />
         <TarjetaKPI
@@ -758,7 +758,7 @@ export default function Inventario({ alCambiar }) {
                 value={fProd.combo_por_persona}
                 onChange={(e) => setFProd((f) => ({ ...f, combo_por_persona: e.target.value }))}
               />
-              <p className="mt-1 text-[11px] text-slate-500">Ej: Cerveza 3 · Comida, Torta y Gaseosa 1.</p>
+              <p className="mt-1 text-[11px] text-slate-500">Ej: Cerveza 4 · Comida 1 (0 = fuera del combo).</p>
             </div>
           </div>
           <div className="flex justify-end gap-2">
