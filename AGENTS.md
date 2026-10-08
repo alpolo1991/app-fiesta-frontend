@@ -39,7 +39,8 @@ npm run build   # genera dist/ (debe salir exit 0)
   solo icono (con `title` + `aria-label`), en tarjeta móvil texto completo.
 - Registro manual: `ModalRegistrarUsuario` en Usuarios (admin y mod), mismos
   datos que el registro público sin pedir clave (genera temporal);
-  WhatsApp siempre `(OBLIGATORIO)`.
+  WhatsApp siempre `(OBLIGATORIO)`. Cédula opcional en ambos formularios
+  (código interno automático si se omite).
 - UUID visible solo lectura (resultado del registro manual + ficha); jamás
   editable ni enviado al crear.
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.

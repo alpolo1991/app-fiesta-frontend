@@ -22,7 +22,7 @@ export default function Registro() {
     const mail = form.email.trim().toLowerCase();
     const w = form.whatsapp.trim().replace(/\D/g, '');
     if (nom.length < 3 || nom.length > 80) return notificar('El nombre debe tener entre 3 y 80 caracteres.', 'error');
-    if (!/^\d{6,12}$/.test(ced)) return notificar('La cédula debe tener solo dígitos (6 a 12).', 'error');
+    if (ced && !/^\d{6,12}$/.test(ced)) return notificar('La cédula debe tener solo dígitos (6 a 12).', 'error');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return notificar('El email no es válido.', 'error');
     if (!/^\d{7,15}$/.test(w)) return notificar('El WhatsApp es obligatorio: solo dígitos (7 a 15).', 'error');
     if (form.password.length < 6 || form.password.length > 72)
@@ -72,7 +72,7 @@ export default function Registro() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="etiqueta" htmlFor="reg-cedula">Cédula</label>
+              <label className="etiqueta" htmlFor="reg-cedula">Cédula (opcional)</label>
               <input
                 id="reg-cedula"
                 className="campo"
@@ -82,9 +82,8 @@ export default function Registro() {
                 inputMode="numeric"
                 minLength={6}
                 maxLength={12}
-                required
               />
-              <p className="mt-1 text-[11px] text-slate-500">Solo dígitos, 6 a 12 caracteres.</p>
+              <p className="mt-1 text-[11px] text-slate-500">Opcional: si no la informas se asigna un código interno.</p>
             </div>
             <div>
               <label className="etiqueta" htmlFor="reg-email">Correo electrónico</label>
