@@ -82,7 +82,7 @@ export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
         <div className="space-y-4">
           <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-center">
             <p className="text-xs uppercase tracking-wider text-emerald-300">
-              {creado.usuario.nombre} · C.C. {creado.usuario.cedula}
+              {creado.usuario.nombre}
             </p>
             <p className="mt-2 font-mono text-2xl font-extrabold tracking-[0.2em] text-white">{creado.password}</p>
             <p className="mt-1 text-[11px] text-slate-400">
