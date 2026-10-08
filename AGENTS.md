@@ -60,8 +60,8 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Fechas: `fechaLegible()` interpreta la BD (UTC) y muestra
   `America/Bogota`.
 - WhatsApp: todo mensaje lleva el bloque de `bloqueEventoWhatsApp()`
-  (nombre, dirección, fecha/hora y enlace); la dirección sale de
-  `lugar_evento` en Configuración.
+  (nombre, lugar, dirección, fecha/hora y enlace); lugar y dirección salen
+  de la Configuración.
 - `AvisoPagos`: banner informativo (no bloquea) en login/registro/soporte
   con `fecha_abono` / `fecha_limite_pago`; sin fechas no renderiza.
 - Imágenes: el límite lo define el admin (`tamano_max_imagen_mb`, hasta 3 MB);
