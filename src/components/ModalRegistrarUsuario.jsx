@@ -95,8 +95,8 @@ export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
               type="button"
               className="btn-fantasma"
               onClick={async () => {
-                const ok = await copiarTexto(`Usuario: ${creado.usuario.email} · Clave: ${creado.password}`);
-                notificar(ok ? 'Credenciales copiadas.' : 'No se pudo copiar.', ok ? 'exito' : 'error');
+                const ok = await copiarTexto(creado.password);
+                notificar(ok ? 'Clave copiada.' : 'No se pudo copiar.', ok ? 'exito' : 'error');
               }}
             >
               📋 Copiar
