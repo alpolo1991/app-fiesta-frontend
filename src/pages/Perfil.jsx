@@ -359,7 +359,8 @@ export default function Perfil() {
               para enviar el primero.
             </p>
           ) : (
-            <div className="overflow-x-auto">
+          <>
+          <div className="hidden overflow-x-auto md:block">
               <table className="w-full min-w-[520px]">
                 <thead className="border-b border-white/10">
                   <tr>
@@ -402,6 +403,40 @@ export default function Perfil() {
                 </tbody>
               </table>
             </div>
+            <div className="space-y-2.5 md:hidden">
+              {soportes.map((s) => {
+                const est = ESTADOS_SOPORTE[s.estado] || ESTADOS_SOPORTE.pendiente;
+                return (
+                  <article key={s.id} className="space-y-2 rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-xs font-semibold capitalize text-slate-300">
+                        {s.tipo === 'pago_total' ? 'Pago total' : 'Abono'}
+                      </p>
+                      <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold ${est.clase}`}>
+                        {est.texto}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-2">
+                      <p className="font-display text-lg font-extrabold tabular-nums text-white">
+                        {dinero(s.monto_reportado)}
+                      </p>
+                      <p className="shrink-0 text-[11px] text-slate-500">{fechaLegible(s.created_at)}</p>
+                    </div>
+                    <p className="text-xs text-slate-400">
+                      {s.estado === 'rechazado' && s.comentario_revision
+                        ? `💬 ${s.comentario_revision}`
+                        : s.estado === 'pendiente'
+                          ? 'Esperando validación'
+                          : '✅ Aceptado'}
+                    </p>
+                    <button type="button" className="btn-mini w-full" onClick={() => abrirComprobante(s)} title="Ver la foto que enviaste">
+                      🖼️ Ver comprobante
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          </>
           )}
         </section>
 
