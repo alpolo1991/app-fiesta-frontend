@@ -60,6 +60,7 @@ export default function Soporte() {
   const datos = [
     { icono: '🎉', etiqueta: 'Evento', valor: config.nombre_evento || 'Fiesta Fin de Año 2026' },
     { icono: '📍', etiqueta: 'Lugar', valor: config.lugar_evento || 'Por definir' },
+    { icono: '🏠', etiqueta: 'Dirección', valor: config.direccion_evento || 'Por definir' },
     { icono: '📅', etiqueta: 'Fecha y hora', valor: fechaHora },
     { icono: '🎟️', etiqueta: 'Cupo', valor: '$50.000 (abono mínimo $20.000)' },
   ];

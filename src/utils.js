@@ -80,11 +80,14 @@ export function fechaLegible(valor) {
 export function bloqueEventoWhatsApp(config = {}) {
   const nombre = config.nombre_evento || 'Fiesta Fin de Año 2026';
   const lugar = config.lugar_evento || 'Por definir';
+  const direccion = String(config.direccion_evento || '').trim();
   const fecha = String(config.fecha_evento || '').trim();
   const hora = String(config.hora_evento || '').trim();
   const cuando = fecha ? `${fecha}${hora ? ` · ${hora}` : ''}` : 'Fecha por definir';
   const base = typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '';
-  const lineas = [`🎉 ${nombre}`, `📍 Lugar: ${lugar}`, `📅 Fecha: ${cuando}`];
+  const lineas = [`🎉 ${nombre}`, `📍 Lugar: ${lugar}`];
+  if (direccion && direccion.toLowerCase() !== 'por definir') lineas.push(`🏠 Dirección: ${direccion}`);
+  lineas.push(`📅 Fecha: ${cuando}`);
   if (base) lineas.push(`🔗 Ingresa aquí: ${base}/login`);
   return lineas.join('\n');
 }

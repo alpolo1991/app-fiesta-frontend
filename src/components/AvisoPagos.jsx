@@ -22,16 +22,18 @@ export default function AvisoPagos({ config = {} }) {
     <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-center text-sm leading-relaxed text-amber-100">
       {abono && limite ? (
         <>
-          💰 <strong className="text-amber-300">Abonos abiertos</strong> · fecha límite{' '}
-          <strong className="tabular-nums text-amber-300">{limite}</strong> — ¡asegura tu cupo! 🎟️
+          💰 <strong className="text-amber-300">Abonos abiertos desde el {abono}</strong> · fecha límite{' '}
+          <strong className="tabular-nums text-amber-300">{limite}</strong> — ¡separa tu cupo, no te quedes sin
+          disfrutar la fiesta! 🎉
         </>
       ) : limite ? (
         <>
-          ⏳ <strong className="text-amber-300">Fecha límite de pago: {limite}</strong> — ¡no te quedes fuera! 🎉
+          ⏳ <strong className="text-amber-300">Fecha límite de abono: {limite}</strong> — ¡separa tu cupo, no te
+          quedes sin disfrutar la fiesta! 🎉
         </>
       ) : (
         <>
-          💰 <strong className="text-amber-300">Abonos desde el {abono}</strong> — ¡separa tu cupo! 🎟️
+          💰 <strong className="text-amber-300">Abonos abiertos desde el {abono}</strong> — ¡separa tu cupo! 🎟️
         </>
       )}
     </div>

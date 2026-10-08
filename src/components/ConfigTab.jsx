@@ -12,6 +12,7 @@ const CLAVES = [
   { clave: 'tamano_max_imagen_mb', etiqueta: '🖼️ Tamaño máx de imagen (MB, hasta 3)', tipo: 'decimal' },
   { clave: 'nombre_evento', etiqueta: '🎉 Nombre del evento', tipo: 'texto' },
   { clave: 'lugar_evento', etiqueta: '📍 Lugar del evento', tipo: 'texto' },
+  { clave: 'direccion_evento', etiqueta: '🏠 Dirección del evento', tipo: 'texto' },
   { clave: 'fecha_evento', etiqueta: '📅 Fecha de la fiesta', tipo: 'fecha' },
   { clave: 'fecha_abono', etiqueta: '💰 Fecha de inicio de abonos (informativa)', tipo: 'fecha' },
   { clave: 'fecha_limite_pago', etiqueta: '⏳ Fecha límite de pago (informativa)', tipo: 'fecha' },
