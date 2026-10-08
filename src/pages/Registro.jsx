@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import api, { mensajeError } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { copiarTexto } from '../utils';
 
 export default function Registro() {
   const { registrarse } = useAuth();
@@ -13,7 +12,6 @@ export default function Registro() {
   const [form, setForm] = useState({ nombre: '', cedula: '', email: '', whatsapp: '', password: '', confirmar: '' });
   const [cargando, setCargando] = useState(false);
   const [verClave, setVerClave] = useState(false);
-  const [codigoAsignado, setCodigoAsignado] = useState(null);
 
   const cambiar = (campo) => (e) => setForm((f) => ({ ...f, [campo]: e.target.value }));
 
@@ -33,15 +31,9 @@ export default function Registro() {
 
     setCargando(true);
     try {
-      const creado = await registrarse({ nombre: nom, cedula: ced, email: mail, whatsapp: w, password: form.password });
-      // Sin cédula informada el backend asigna código interno: mostrarlo una vez.
-      if (!ced && creado?.cedula) {
-        setCodigoAsignado(creado.cedula);
-        notificar('¡Cuenta creada! Guarda tu código.', 'exito');
-      } else {
-        notificar('¡Cuenta creada! Ya puedes completar tu perfil.', 'exito');
-        navegar('/perfil', { replace: true });
-      }
+      await registrarse({ nombre: nom, cedula: ced, email: mail, whatsapp: w, password: form.password });
+      notificar('¡Cuenta creada! Ya puedes completar tu perfil.', 'exito');
+      navegar('/perfil', { replace: true });
     } catch (error) {
       notificar(mensajeError(error, 'No se pudo crear la cuenta.'), 'error');
     } finally {
@@ -62,32 +54,6 @@ export default function Registro() {
           </p>
         </div>
 
-        {codigoAsignado ? (
-          <div className="anim-entrada space-y-4 text-center">
-            <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-300">Tu código interno</p>
-              <p className="mt-2 font-mono text-3xl font-extrabold tracking-[0.2em] text-white">{codigoAsignado}</p>
-              <p className="mt-2 text-xs leading-relaxed text-slate-400">
-                Como no informaste cédula te asignamos este código. Guárdalo: lo usarás para reclamar tu combo.
-              </p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-2">
-              <button
-                type="button"
-                className="btn-fantasma"
-                onClick={async () => {
-                  const ok = await copiarTexto(codigoAsignado);
-                  notificar(ok ? 'Código copiado.' : 'No se pudo copiar.', ok ? 'exito' : 'error');
-                }}
-              >
-                📋 Copiar código
-              </button>
-              <button type="button" className="btn-oro" onClick={() => navegar('/perfil', { replace: true })}>
-                Continuar a mi perfil →
-              </button>
-            </div>
-          </div>
-        ) : (
         <form onSubmit={enviar} className="space-y-4">
           <div>
             <label className="etiqueta" htmlFor="reg-nombre">Nombre completo</label>
@@ -190,7 +156,6 @@ export default function Registro() {
             {cargando ? 'Creando cuenta…' : 'Crear cuenta'}
           </button>
         </form>
-        )}
 
         <p className="mt-5 text-center text-sm text-slate-500">
           ¿Ya tienes cuenta?{' '}

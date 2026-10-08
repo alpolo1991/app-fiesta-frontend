@@ -40,8 +40,8 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Registro manual: `ModalRegistrarUsuario` en Usuarios (admin y mod), mismos
   datos que el registro público sin pedir clave (genera temporal);
   WhatsApp siempre `(OBLIGATORIO)`. Cédula opcional en ambos formularios
-  (código interno automático si se omite); el registro público muestra el
-  código asignado una vez antes de ir al perfil.
+  (código interno automático si se omite); el código solo se ve en el perfil
+  (solo lectura, el usuario no lo edita).
 - UUID visible solo lectura (resultado del registro manual + ficha); jamás
   editable ni enviado al crear.
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.
