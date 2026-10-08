@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import api, { mensajeError, obtenerUrlImagen } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { copiarTexto, dinero, estadoPago, ESTADOS_SOPORTE, fechaLegible } from '../utils';
+import { copiarTexto, dinero, estadoPago, ESTADOS_SOPORTE, fechaLegible, bloqueEventoWhatsApp } from '../utils';
 import Modal from './Modal';
 import ModalDatosUsuario from './ModalDatosUsuario';
 
@@ -37,6 +37,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
   const [visorVal, setVisorVal] = useState(null); // {soporte, url}
   const [rechazoVal, setRechazoVal] = useState(null); // {id, texto}
   const [ocupado, setOcupado] = useState(false);
+  const [config, setConfig] = useState({});
 
   const esAdmin = modo === 'admin';
 
@@ -54,6 +55,10 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
 
   useEffect(() => {
     cargar();
+    api
+      .get('/configuracion')
+      .then((r) => setConfig(r.data || {}))
+      .catch(() => {});
   }, [cargar]);
 
   const filtrados = usuarios.filter((u) => {
@@ -529,7 +534,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
                 <a
                   className="btn-oro"
                   href={`https://wa.me/${numeroWhatsApp(reset.usuario.whatsapp)}?text=${encodeURIComponent(
-                    `Hola ${reset.usuario.nombre}, tu clave temporal es: ${reset.password}. Cámbiala al ingresar.`
+                    `Hola ${reset.usuario.nombre}, tu clave temporal es: ${reset.password}. Cámbiala al ingresar.\n\n${bloqueEventoWhatsApp(config)}`
                   )}`}
                   target="_blank"
                   rel="noreferrer"

@@ -71,3 +71,20 @@ export function fechaLegible(valor) {
     minute: '2-digit',
   });
 }
+
+/**
+ * Bloque de datos del evento para mensajes de WhatsApp: siempre lleva
+ * nombre, dirección, fecha/hora y enlace de la app. Se arma con la
+ * configuración pública; si algo no está definido usa un texto neutro.
+ */
+export function bloqueEventoWhatsApp(config = {}) {
+  const nombre = config.nombre_evento || 'Fiesta Fin de Año 2026';
+  const lugar = config.lugar_evento || 'Por definir';
+  const fecha = String(config.fecha_evento || '').trim();
+  const hora = String(config.hora_evento || '').trim();
+  const cuando = fecha ? `${fecha}${hora ? ` · ${hora}` : ''}` : 'Fecha por definir';
+  const base = typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '';
+  const lineas = [`🎉 ${nombre}`, `📍 Lugar: ${lugar}`, `📅 Fecha: ${cuando}`];
+  if (base) lineas.push(`🔗 Ingresa aquí: ${base}/login`);
+  return lineas.join('\n');
+}

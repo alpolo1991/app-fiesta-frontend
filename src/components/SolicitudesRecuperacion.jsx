@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import api, { mensajeError } from '../api/client';
 import { useToast } from '../context/ToastContext';
-import { copiarTexto, fechaLegible } from '../utils';
+import { copiarTexto, fechaLegible, bloqueEventoWhatsApp } from '../utils';
 import Modal from './Modal';
 
 /** Número colombiano normalizado para wa.me. */
@@ -23,6 +23,7 @@ export default function SolicitudesRecuperacion({ alCambiar }) {
   const [cargando, setCargando] = useState(true);
   const [reset, setReset] = useState(null); // {usuario, password}
   const [ocupado, setOcupado] = useState(false);
+  const [config, setConfig] = useState({});
 
   const cargar = useCallback(async () => {
     try {
@@ -38,6 +39,10 @@ export default function SolicitudesRecuperacion({ alCambiar }) {
 
   useEffect(() => {
     cargar();
+    api
+      .get('/configuracion')
+      .then((r) => setConfig(r.data || {}))
+      .catch(() => {});
   }, [cargar]);
 
   /** Genera la temporal y abre el modal con opciones de envío. */
@@ -122,7 +127,7 @@ export default function SolicitudesRecuperacion({ alCambiar }) {
                 <a
                   className="btn-exito"
                   href={`https://wa.me/${wa}?text=${encodeURIComponent(
-                    `Hola ${reset.usuario.nombre}, tu clave temporal es: ${reset.password}. Cámbiala al ingresar.`
+                    `Hola ${reset.usuario.nombre}, tu clave temporal es: ${reset.password}. Cámbiala al ingresar.\n\n${bloqueEventoWhatsApp(config)}`
                   )}`}
                   target="_blank"
                   rel="noreferrer"
