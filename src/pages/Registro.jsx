@@ -103,7 +103,7 @@ export default function Registro() {
           </div>
 
           <div>
-            <label className="etiqueta" htmlFor="reg-wa">WhatsApp (obligatorio)</label>
+            <label className="etiqueta" htmlFor="reg-wa">WhatsApp (OBLIGATORIO)</label>
             <input
               id="reg-wa"
               className="campo"
