@@ -198,6 +198,7 @@ export default function ModalDatosUsuario({ usuario, onCerrar }) {
                   <Fila etiqueta="WhatsApp" valor={u.whatsapp || '—'} />
                   <Fila etiqueta="Email" valor={u.email} />
                   <Fila etiqueta="Cédula" valor={u.cedula} />
+                  <Fila etiqueta="UUID" valor={u.uuid || '—'} />
                 </Seccion>
 
                 <Seccion titulo={`👥 Acompañantes (${acomp.cantidad}/1)`}>

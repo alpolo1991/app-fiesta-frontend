@@ -40,6 +40,8 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Registro manual: `ModalRegistrarUsuario` en Usuarios (admin y mod), mismos
   datos que el registro público sin pedir clave (genera temporal);
   WhatsApp siempre `(OBLIGATORIO)`.
+- UUID visible solo lectura (resultado del registro manual + ficha); jamás
+  editable ni enviado al crear.
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.
 - Modales con `role="dialog"`, cierre con Escape y clic fuera.
 - Entregas: botones `+1` deshabilitados si rol usuario y
