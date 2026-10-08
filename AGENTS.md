@@ -42,6 +42,8 @@ npm run build   # genera dist/ (debe salir exit 0)
   WhatsApp siempre `(OBLIGATORIO)`. Cédula opcional en ambos formularios
   (código interno automático si se omite); el código solo se ve en el perfil
   (solo lectura, el usuario no lo edita).
+- Soporte por el usuario: `ModalSubirSoporte` (botón 📤 en fila + modal de
+  validar); queda pendiente igual.
 - UUID visible solo lectura (resultado del registro manual + ficha); jamás
   editable ni enviado al crear.
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.
