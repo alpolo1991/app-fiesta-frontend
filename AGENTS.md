@@ -47,7 +47,7 @@ npm run build   # genera dist/ (debe salir exit 0)
   `ganancias.inscripcionesConfirmadas + ganancias.acompanantesConfirmados`.
 - Perfil: si `pagadoTotal` botón verde `btn-exito` con conteo y scroll a
   comprobantes; si debe, botón dorado con saldo. Usuarios pagados en verde
-  (`✅ Pagado · $0`).
+  (`✅ Pagado · $0`); Eliminar deshabilitado con pagos registrados.
 - Fechas: `fechaLegible()` interpreta la BD (UTC) y muestra
   `America/Bogota`.
 - Imágenes: el límite lo define el admin (`tamano_max_imagen_mb`, hasta 3 MB);
