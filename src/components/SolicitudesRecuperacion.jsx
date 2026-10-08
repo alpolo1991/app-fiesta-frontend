@@ -83,7 +83,7 @@ export default function SolicitudesRecuperacion({ alCambiar }) {
             >
               <span className="min-w-0 text-sm">
                 <strong className="text-white">{s.usuario_nombre}</strong>{' '}
-                <span className="break-all text-slate-400">· {s.usuario_email} · {fechaLegible(s.created_at)}</span>
+                <span className="break-all text-slate-400">· {s.usuario_email || '—'} · {fechaLegible(s.created_at)}</span>
               </span>
               <button
                 type="button"
@@ -107,7 +107,7 @@ export default function SolicitudesRecuperacion({ alCambiar }) {
           <div className="space-y-4">
             <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-4 text-center">
               <p className="text-xs uppercase tracking-wider text-amber-300">
-                Clave temporal de {reset.usuario.nombre} ({reset.usuario.email})
+                Clave temporal de {reset.usuario.nombre}{reset.usuario.email ? ` (${reset.usuario.email})` : ''}
               </p>
               <p className="mt-2 font-mono text-2xl font-extrabold tracking-[0.2em] text-white">{reset.password}</p>
               <p className="mt-1 text-[11px] text-slate-400">Deberá cambiarla al ingresar · solo se muestra una vez</p>

@@ -112,7 +112,13 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
   };
 
   /** Botones de fila: en tabla solo icono (no rompe el layout); en móvil texto completo. */
-  const Botones = ({ u, esStaffFila, vertical }) => (
+  // Reset: admin siempre; mod solo usuarios, o al admin si lo solicitó (solicitud pendiente).
+  const Botones = ({ u, esStaffFila, vertical }) => {
+    const resetPermitido = esAdmin || u.rol === 'usuario' || (u.rol === 'admin' && u.solicitud_pendiente);
+    const tituloReset = !resetPermitido
+      ? 'Desactivado: solo si lo solicita (ver Solicitudes)'
+      : 'Genera una contraseña temporal nueva';
+    return (
     <div className={vertical ? 'flex flex-col gap-1.5' : 'acciones-tabla'}>
       <button
         type="button"
@@ -127,8 +133,8 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
         type="button"
         className={`btn-mini${vertical ? ' w-full' : ''}`}
         onClick={() => resetearPassword(u)}
-        disabled={ocupado}
-        title="Genera una contraseña temporal nueva"
+        disabled={ocupado || !resetPermitido}
+        title={tituloReset}
         aria-label={`Resetear contraseña de ${u.nombre}`}
       >
         🔑{vertical ? ' Reset' : ''}
@@ -179,7 +185,8 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
         </>
       )}
     </div>
-  );
+    );
+  };
 
   const validarPago = async (u, nuevo) => {
     try {
@@ -389,7 +396,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
                   <tr key={u.id} className="hover:bg-white/[0.03]">
                     <td className="td-tabla">
                       <p className="font-semibold text-white">{u.nombre}</p>
-                      <p className="text-xs text-slate-500">{u.email}</p>
+                      <p className="text-xs text-slate-500">{u.email || '—'}</p>
                     </td>
                     <td className="td-tabla text-slate-400">{u.cedula}</td>
                     <td className="td-tabla">
@@ -474,7 +481,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-white">{u.nombre}</p>
-                    <p className="truncate text-xs text-slate-500">{u.email}</p>
+                    <p className="truncate text-xs text-slate-500">{u.email || '—'}</p>
                     <p className="text-xs text-slate-500">C.C. {u.cedula}</p>
                   </div>
                   {esAdmin ? (
