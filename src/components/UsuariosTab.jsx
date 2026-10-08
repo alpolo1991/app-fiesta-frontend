@@ -5,6 +5,7 @@ import { useToast } from '../context/ToastContext';
 import { copiarTexto, dinero, estadoPago, ESTADOS_SOPORTE, fechaLegible, bloqueEventoWhatsApp } from '../utils';
 import Modal from './Modal';
 import ModalDatosUsuario from './ModalDatosUsuario';
+import ModalRegistrarUsuario from './ModalRegistrarUsuario';
 
 /** Número colombiano normalizado para wa.me (ej: 3133506369 → 573133506369). */
 function numeroWhatsApp(valor) {
@@ -38,6 +39,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
   const [rechazoVal, setRechazoVal] = useState(null); // {id, texto}
   const [ocupado, setOcupado] = useState(false);
   const [config, setConfig] = useState({});
+  const [registrando, setRegistrando] = useState(false);
 
   const esAdmin = modo === 'admin';
 
@@ -329,6 +331,14 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
           onChange={(e) => setBusqueda(e.target.value)}
         />
         <span className="text-xs text-slate-500">{filtrados.length} usuario(s)</span>
+        <button
+          type="button"
+          className="btn-oro !px-3.5 !py-2 text-xs"
+          onClick={() => setRegistrando(true)}
+          title="Registrar un usuario manualmente (mismos datos del registro público)"
+        >
+          ➕ Registrar
+        </button>
       </div>
 
       {/* Tabla (tablet y compu) */}
@@ -507,6 +517,16 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
 
       {/* ============ Modal: ficha del usuario (estilo WhatsApp) ============ */}
       <ModalDatosUsuario usuario={ficha} onCerrar={() => setFicha(null)} />
+
+      {/* ============ Modal: registro manual ============ */}
+      <ModalRegistrarUsuario
+        abierto={registrando}
+        onCerrar={() => setRegistrando(false)}
+        onCreado={() => {
+          cargar();
+          alCambiar?.();
+        }}
+      />
 
       {/* ============ Modal: contraseña temporal ============ */}
       <Modal abierto={!!reset} titulo="Contraseña temporal generada" onCerrar={() => setReset(null)}>
