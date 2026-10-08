@@ -13,6 +13,8 @@ const CLAVES = [
   { clave: 'nombre_evento', etiqueta: '🎉 Nombre del evento', tipo: 'texto' },
   { clave: 'lugar_evento', etiqueta: '📍 Lugar del evento', tipo: 'texto' },
   { clave: 'fecha_evento', etiqueta: '📅 Fecha de la fiesta', tipo: 'fecha' },
+  { clave: 'fecha_abono', etiqueta: '💰 Fecha de inicio de abonos (informativa)', tipo: 'fecha' },
+  { clave: 'fecha_limite_pago', etiqueta: '⏳ Fecha límite de pago (informativa)', tipo: 'fecha' },
   { clave: 'hora_evento', etiqueta: '🕗 Hora inicial de la fiesta', tipo: 'hora' },
 ];
 

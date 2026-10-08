@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api, { mensajeError } from '../api/client';
+import AvisoPagos from '../components/AvisoPagos';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -12,6 +13,15 @@ export default function Registro() {
   const [form, setForm] = useState({ nombre: '', cedula: '', email: '', whatsapp: '', password: '', confirmar: '' });
   const [cargando, setCargando] = useState(false);
   const [verClave, setVerClave] = useState(false);
+  const [config, setConfig] = useState({});
+
+  // Fechas informativas de pago (endpoint público).
+  useEffect(() => {
+    api
+      .get('/configuracion')
+      .then((r) => setConfig(r.data || {}))
+      .catch(() => {});
+  }, []);
 
   const cambiar = (campo) => (e) => setForm((f) => ({ ...f, [campo]: e.target.value }));
 
@@ -42,7 +52,8 @@ export default function Registro() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-lg py-6">
+    <div className="mx-auto w-full max-w-lg space-y-4 py-6">
+      <AvisoPagos config={config} />
       <div className="panela p-6 sm:p-8">
         <div className="mb-6 text-center">
           <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-fuchsia-500 text-2xl">

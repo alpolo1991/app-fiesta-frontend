@@ -62,6 +62,8 @@ npm run build   # genera dist/ (debe salir exit 0)
 - WhatsApp: todo mensaje lleva el bloque de `bloqueEventoWhatsApp()`
   (nombre, dirección, fecha/hora y enlace); la dirección sale de
   `lugar_evento` en Configuración.
+- `AvisoPagos`: banner informativo (no bloquea) en login/registro/soporte
+  con `fecha_abono` / `fecha_limite_pago`; sin fechas no renderiza.
 - Imágenes: el límite lo define el admin (`tamano_max_imagen_mb`, hasta 3 MB);
   `ModalPago` y QR lo leen de `/configuracion` (default 1 MB).
 - Para probar la UI sin tocar datos reales: backend temporal

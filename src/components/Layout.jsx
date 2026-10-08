@@ -170,8 +170,11 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-white/10 px-4 py-5 text-center text-xs text-slate-500">
-        Fiesta Fin de Año 2026 · Hecho con 🎊 para compartir la fiesta
+      <footer className="border-t border-white/10 px-4 py-5 text-center text-xs leading-relaxed text-slate-500">
+        <span className="font-display text-sm font-bold text-slate-300">🎊 Fiesta Fin de Año 2026</span>
+        <span className="mt-0.5 block">
+          ¡Asegura tu cupo y nos vemos en la pista! 💃🕺
+        </span>
       </footer>
 
       <CambiarPassword abierto={cambiandoPassword} onCerrar={() => setCambiandoPassword(false)} />
