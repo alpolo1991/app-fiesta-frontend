@@ -66,6 +66,9 @@ npm run build   # genera dist/ (debe salir exit 0)
   de la Configuración.
 - `AvisoPagos`: banner informativo (no bloquea) en login/registro/soporte
   con `fecha_abono` / `fecha_limite_pago`; sin fechas no renderiza.
+- Póster: lo sube el admin en Configuración; Soporte lo muestra con
+  `🖼️ Ver póster`, y `Layout` lo abre al iniciar (tope `poster_visto` en
+  localStorage: 2 veces cada 12 h).
 - Imágenes: el límite lo define el admin (`tamano_max_imagen_mb`, hasta 3 MB);
   `ModalPago` y QR lo leen de `/configuracion` (default 1 MB).
 - Para probar la UI sin tocar datos reales: backend temporal

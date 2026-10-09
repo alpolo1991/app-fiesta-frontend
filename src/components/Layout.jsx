@@ -4,6 +4,31 @@ import { useAuth, PANEL_POR_ROL } from '../context/AuthContext';
 import api from '../api/client';
 import CambiarPassword from './CambiarPassword';
 import CuentaRegresiva from './CuentaRegresiva';
+import Modal from './Modal';
+
+/** Tope del póster al iniciar: 2 vistas cada 12 horas por navegador. */
+const POSTER_VENTANA_MS = 12 * 3600 * 1000;
+const POSTER_MAX_VECES = 2;
+
+/** ¿Toca mostrar el póster? Lee y actualiza el registro en localStorage. */
+function tocaMostrarPoster() {
+  try {
+    const ahora = Date.now();
+    const raw = localStorage.getItem('poster_visto');
+    const rec = raw ? JSON.parse(raw) : null;
+    if (!rec || !rec.inicio || ahora - rec.inicio > POSTER_VENTANA_MS) {
+      localStorage.setItem('poster_visto', JSON.stringify({ inicio: ahora, veces: 1 }));
+      return true;
+    }
+    if (rec.veces < POSTER_MAX_VECES) {
+      localStorage.setItem('poster_visto', JSON.stringify({ inicio: rec.inicio, veces: rec.veces + 1 }));
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
 
 /** Enlaces de navegación según rol. */
 const enlacesPorRol = {
@@ -37,12 +62,17 @@ export default function Layout() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [cambiandoPassword, setCambiandoPassword] = useState(false);
   const [config, setConfig] = useState({});
+  const [verPoster, setVerPoster] = useState(false);
 
   // Fecha/hora de la fiesta para la cuenta regresiva (endpoint público).
+  // El póster se muestra al iniciar (máx 2 veces cada 12 h por navegador).
   useEffect(() => {
     api
       .get('/configuracion')
-      .then((r) => setConfig(r.data))
+      .then((r) => {
+        setConfig(r.data);
+        if (r.data?.tiene_poster && tocaMostrarPoster()) setVerPoster(true);
+      })
       .catch(() => {});
   }, []);
 
@@ -178,6 +208,21 @@ export default function Layout() {
       </footer>
 
       <CambiarPassword abierto={cambiandoPassword} onCerrar={() => setCambiandoPassword(false)} />
+
+      <Modal abierto={verPoster} titulo={`🖼️ ${config.nombre_evento || 'Fiesta Fin de Año'}`} onCerrar={() => setVerPoster(false)} ancho="lg">
+        <div className="space-y-3">
+          <div className="flex justify-center overflow-hidden rounded-xl border border-white/10 bg-slate-950">
+            <img
+              src={`${api.defaults.baseURL}/configuracion/poster`}
+              alt="Póster del evento"
+              className="max-h-[70vh] w-auto object-contain"
+            />
+          </div>
+          <button type="button" className="btn-oro w-full" onClick={() => setVerPoster(false)}>
+            ¡Nos vemos allá! 🎉
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
