@@ -53,10 +53,15 @@ export default function ModalSubirSoporte({ usuario, abierto, onCerrar, onEnviad
     setArchivo(file);
   };
 
+  const minimoAbono = Math.min(20000, saldo);
+
   const enviar = async (e) => {
     e.preventDefault();
     const montoNum = Number(monto);
     if (!archivo) return notificar('Adjunta la imagen del soporte de pago.', 'error');
+    if (tipo === 'abono' && (isNaN(montoNum) || montoNum < minimoAbono)) {
+      return notificar(`El abono mínimo es ${dinero(minimoAbono)}.`, 'error');
+    }
     if (tipo === 'abono' && (isNaN(montoNum) || montoNum <= 0)) return notificar('Indica el monto reportado.', 'error');
 
     const datos = new FormData();
@@ -107,11 +112,11 @@ export default function ModalSubirSoporte({ usuario, abierto, onCerrar, onEnviad
                 className="campo"
                 value={monto}
                 onChange={(e) => setMonto(e.target.value)}
-                min={1}
+                min={tipo === 'abono' ? minimoAbono : 1}
                 max={saldo}
                 step="1000"
                 disabled={tipo === 'pago_total'}
-                placeholder={dinero(Math.min(20000, saldo))}
+                placeholder={dinero(minimoAbono)}
                 required
               />
             </div>
