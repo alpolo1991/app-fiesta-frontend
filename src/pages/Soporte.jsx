@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import AvisoPagos from '../components/AvisoPagos';
+import Modal from '../components/Modal';
 import { bloqueEventoWhatsApp } from '../utils';
 
 /**
@@ -10,6 +11,7 @@ import { bloqueEventoWhatsApp } from '../utils';
 export default function Soporte() {
   const [config, setConfig] = useState({});
   const [contactos, setContactos] = useState(null); // null = cargando
+  const [verPoster, setVerPoster] = useState(false);
 
   useEffect(() => {
     api
@@ -117,7 +119,14 @@ export default function Soporte() {
 
       {/* Información del evento */}
       <div className="panela mt-6 p-5">
-        <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-slate-400">Información del evento</h2>
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">Información del evento</h2>
+          {config.tiene_poster && (
+            <button type="button" className="btn-mini" onClick={() => setVerPoster(true)} title="Ver el póster del evento">
+              🖼️ Ver póster
+            </button>
+          )}
+        </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {datos.map((d) => (
             <div key={d.etiqueta} className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
@@ -138,6 +147,16 @@ export default function Soporte() {
       <p className="mt-6 rounded-xl border border-amber-400/25 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-200">
         📌 Para reportar un problema, escríbenos por WhatsApp. Nuestro equipo te responderá lo antes posible.
       </p>
+
+      <Modal abierto={verPoster} titulo="🖼️ Póster del evento" onCerrar={() => setVerPoster(false)} ancho="lg">
+        <div className="flex justify-center overflow-hidden rounded-xl border border-white/10 bg-slate-950">
+          <img
+            src={`${api.defaults.baseURL}/configuracion/poster`}
+            alt="Póster del evento"
+            className="max-h-[70vh] w-auto object-contain"
+          />
+        </div>
+      </Modal>
     </div>
   );
 }

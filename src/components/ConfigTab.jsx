@@ -30,6 +30,44 @@ export default function ConfigTab() {
   const [valores, setValores] = useState({});
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(null);
+  const [posterKey, setPosterKey] = useState(0); // rompe caché tras subir/quitar
+  const [subiendoPoster, setSubiendoPoster] = useState(false);
+
+  const urlPoster = `${api.defaults.baseURL}/configuracion/poster${posterKey ? `?t=${posterKey}` : ''}`;
+
+  const subirPoster = async (file) => {
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      return notificar('Solo se permiten imágenes (jpg, png, webp).', 'error');
+    }
+    const datos = new FormData();
+    datos.append('archivo', file);
+    setSubiendoPoster(true);
+    try {
+      const { data } = await api.put('/configuracion/poster', datos);
+      notificar(data.mensaje, 'exito');
+      setPosterKey((k) => k + 1);
+      setValores((v) => ({ ...v, tiene_poster: true }));
+    } catch (error) {
+      notificar(mensajeError(error), 'error');
+    } finally {
+      setSubiendoPoster(false);
+    }
+  };
+
+  const quitarPoster = async () => {
+    if (!window.confirm('¿Quitar el póster del evento?')) return;
+    setSubiendoPoster(true);
+    try {
+      const { data } = await api.delete('/configuracion/poster');
+      notificar(data.mensaje, 'exito');
+      setValores((v) => ({ ...v, tiene_poster: false }));
+    } catch (error) {
+      notificar(mensajeError(error), 'error');
+    } finally {
+      setSubiendoPoster(false);
+    }
+  };
 
   const cargar = useCallback(async () => {
     setCargando(true);
@@ -156,6 +194,53 @@ export default function ConfigTab() {
           💾 Guardar todo
         </button>
       </div>
+
+      {/* Póster del evento (solo admin): se muestra en Soporte y al iniciar */}
+      <section className="panela p-4">
+        <p className="etiqueta">🖼️ Póster del evento</p>
+        {valores.tiene_poster ? (
+          <div className="space-y-3">
+            <div className="flex justify-center overflow-hidden rounded-xl border border-white/10 bg-slate-950">
+              <img src={urlPoster} alt="Póster del evento" className="max-h-64 w-auto object-contain" />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <label className="btn-oro shrink-0 cursor-pointer">
+                {subiendoPoster ? '…' : '🔄 Cambiar'}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  disabled={subiendoPoster}
+                  onChange={(e) => {
+                    subirPoster(e.target.files?.[0]);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+              <button type="button" className="btn-fantasma shrink-0" onClick={quitarPoster} disabled={subiendoPoster}>
+                🗑 Quitar
+              </button>
+            </div>
+          </div>
+        ) : (
+          <label className="btn-oro cursor-pointer">
+            {subiendoPoster ? 'Subiendo…' : '📤 Subir póster'}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              disabled={subiendoPoster}
+              onChange={(e) => {
+                subirPoster(e.target.files?.[0]);
+                e.target.value = '';
+              }}
+            />
+          </label>
+        )}
+        <p className="mt-1.5 text-[11px] text-slate-500">
+          Se muestra en Soporte y al iniciar (máx 2 veces cada 12 h por navegador).
+        </p>
+      </section>
     </div>
   );
 }
