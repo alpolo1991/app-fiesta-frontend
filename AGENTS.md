@@ -37,8 +37,9 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Tablas → tarjetas apiladas en teléfono (`hidden md:block` / `md:hidden`).
 - Acciones en tablas: caja `.acciones-tabla` en `td.td-acciones`; en tabla
   solo icono (con `title` + `aria-label`), en tarjeta móvil texto completo.
-- Mod: sin admins en lista, sin emails ajenos (`—`), reset a staff solo si el
-  admin lo solicitó (`solicitud_pendiente`, se desactiva al atender).
+- Mod: sin admins en lista, sin emails ajenos (`—`) en Usuarios y Entregas,
+  reset a staff solo si el admin lo solicitó (`solicitud_pendiente`, se
+  desactiva al atender).
 - Registro manual: `ModalRegistrarUsuario` en Usuarios (admin y mod), mismos
   datos que el registro público sin pedir clave (genera temporal);
   WhatsApp siempre `(OBLIGATORIO)`. Cédula opcional en ambos formularios

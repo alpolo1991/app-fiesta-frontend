@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import api, { mensajeError } from '../api/client';
 import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext';
 import { estadoPago } from '../utils';
 
 const FILTROS = [
@@ -21,6 +22,8 @@ const ETIQUETA_ROL = { admin: '🛡️ Admin', moderador: '🧑‍⚖️ Moderad
  */
 export default function Entregas({ alCambiar }) {
   const { notificar } = useToast();
+  const { usuario: yo } = useAuth();
+  const soyMod = yo?.rol === 'moderador';
   const [usuarios, setUsuarios] = useState([]);
   const [productos, setProductos] = useState([]);
   const [busqueda, setBusqueda] = useState('');
@@ -94,7 +97,7 @@ export default function Entregas({ alCambiar }) {
         <input
           id="buscar-entregas"
           className="campo max-w-sm"
-          placeholder="🔍 Buscar usuario por nombre, cédula o email…"
+          placeholder={soyMod ? '🔍 Buscar usuario por nombre o cédula…' : '🔍 Buscar usuario por nombre, cédula o email…'}
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
@@ -141,7 +144,7 @@ export default function Entregas({ alCambiar }) {
                     <td className="td-tabla">
                       <p className="font-semibold text-white">{u.nombre}</p>
                       <p className="text-xs text-slate-500">
-                        C.C. {u.cedula} · {u.email}
+                        C.C. {u.cedula}{u.email ? ` · ${u.email}` : ''}
                       </p>
                       {Number(u.n_acompanantes) > 0 && (
                         <p className="mt-0.5 text-[11px] font-semibold text-sky-300" title={`Acompañantes: ${u.nombres_acompanantes || ''}`}>
