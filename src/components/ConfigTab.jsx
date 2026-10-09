@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import api, { mensajeError } from '../api/client';
+import api, { mensajeError, urlApi } from '../api/client';
 import { useToast } from '../context/ToastContext';
 
 const CLAVES = [
@@ -33,7 +33,7 @@ export default function ConfigTab() {
   const [posterKey, setPosterKey] = useState(0); // rompe caché tras subir/quitar
   const [subiendoPoster, setSubiendoPoster] = useState(false);
 
-  const urlPoster = `${api.defaults.baseURL}/configuracion/poster${posterKey ? `?t=${posterKey}` : ''}`;
+  const urlPoster = urlApi('/configuracion/poster') + (posterKey ? `?t=${posterKey}` : '');
 
   const subirPoster = async (file) => {
     if (!file) return;

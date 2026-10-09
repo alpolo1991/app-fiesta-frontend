@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import api from '../api/client';
+import api, { urlApi } from '../api/client';
 import AvisoPagos from '../components/AvisoPagos';
 import Modal from '../components/Modal';
 import { bloqueEventoWhatsApp } from '../utils';
@@ -151,7 +151,7 @@ export default function Soporte() {
       <Modal abierto={verPoster} titulo="🖼️ Póster del evento" onCerrar={() => setVerPoster(false)} ancho="lg">
         <div className="flex justify-center overflow-hidden rounded-xl border border-white/10 bg-slate-950">
           <img
-            src={`${api.defaults.baseURL}/configuracion/poster`}
+            src={urlApi('/configuracion/poster')}
             alt="Póster del evento"
             className="max-h-[70vh] w-auto object-contain"
           />
