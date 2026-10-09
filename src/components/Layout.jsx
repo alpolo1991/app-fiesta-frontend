@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth, PANEL_POR_ROL } from '../context/AuthContext';
-import api from '../api/client';
+import api, { urlApi } from '../api/client';
 import CambiarPassword from './CambiarPassword';
 import CuentaRegresiva from './CuentaRegresiva';
 import Modal from './Modal';
@@ -213,7 +213,7 @@ export default function Layout() {
         <div className="space-y-3">
           <div className="flex justify-center overflow-hidden rounded-xl border border-white/10 bg-slate-950">
             <img
-              src={`${api.defaults.baseURL}/configuracion/poster`}
+              src={urlApi('/configuracion/poster')}
               alt="Póster del evento"
               className="max-h-[70vh] w-auto object-contain"
             />

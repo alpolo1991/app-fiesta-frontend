@@ -58,4 +58,13 @@ export async function obtenerUrlImagen(url) {
   return URL.createObjectURL(new Blob([blob], { type: tipo }));
 }
 
+/**
+ * Une baseURL y ruta sin dobles slashes (VITE_API_URL puede traer `/`
+ * final y romper los <img> que no pasan por Axios).
+ */
+export function urlApi(ruta) {
+  const base = String(api.defaults.baseURL || '').replace(/\/+$/, '');
+  return `${base}/${String(ruta || '').replace(/^\/+/, '')}`;
+}
+
 export default api;

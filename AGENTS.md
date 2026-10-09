@@ -69,6 +69,8 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Póster: lo sube el admin en Configuración; Soporte lo muestra con
   `🖼️ Ver póster`, y `Layout` lo abre al iniciar (tope `poster_visto` en
   localStorage: 2 veces cada 12 h).
+- URLs de `<img>` con `urlApi()` (normaliza el `/` final de `VITE_API_URL`);
+  nunca concatenar `baseURL` a mano.
 - Imágenes: el límite lo define el admin (`tamano_max_imagen_mb`, hasta 3 MB);
   `ModalPago` y QR lo leen de `/configuracion` (default 1 MB).
 - Para probar la UI sin tocar datos reales: backend temporal
