@@ -177,9 +177,9 @@ export default function CajasTab() {
               className="campo"
               min="1"
               max="100000000"
-              step="1000"
               value={form.monto}
               onChange={(e) => setForm((f) => ({ ...f, monto: e.target.value }))}
+              placeholder="1000"
               required
             />
           </div>
