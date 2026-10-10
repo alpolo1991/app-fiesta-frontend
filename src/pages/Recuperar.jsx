@@ -65,7 +65,7 @@ export default function Recuperar() {
   const nombreMod = config.nombre_moderador || 'Moderador';
   // El cuerpo incluye el email para que el admin sepa a quién resetear.
   const textoWa = encodeURIComponent(
-    `Hola, soy ${email || 'empleado'} y necesito recuperar mi contraseña de la Fiesta Fin de Año. Mi correo registrado es: ${email || '(lo escribo por aquí)'}.\n\n${bloqueEventoWhatsApp(config)}`
+    `Hola, soy *${email || 'empleado'}* y necesito recuperar mi contraseña de la Fiesta Fin de Año. Mi correo registrado es: *${email || '(lo escribo por aquí)'}*.\n\n${bloqueEventoWhatsApp(config)}`
   );
 
   // Staff real (todo admin/mod con WhatsApp aparece solo); fallback a configuración.

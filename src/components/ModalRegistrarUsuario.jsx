@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api, { mensajeError } from '../api/client';
 import { useToast } from '../context/ToastContext';
-import { bloqueEventoWhatsApp, copiarTexto, dinero } from '../utils';
+import { copiarTexto, dinero, mensajeAcceso } from '../utils';
 import Modal from './Modal';
 
 /** Número colombiano normalizado para wa.me. */
@@ -72,7 +72,13 @@ export default function ModalRegistrarUsuario({ abierto, onCerrar, onCreado }) {
   const wa = creado ? numeroWhatsApp(creado.usuario.whatsapp) : '';
   const textoWa = creado
     ? encodeURIComponent(
-        `Hola ${creado.usuario.nombre}, te registramos en la Fiesta Fin de Año. Tu clave temporal es: ${creado.password}. Cámbiala al ingresar.\n\n${bloqueEventoWhatsApp(config)}`
+        mensajeAcceso({
+          nombre: creado.usuario.nombre,
+          email: creado.usuario.email,
+          clave: creado.password,
+          intro: 'Te registramos en la fiesta, tu acceso:',
+          config,
+        })
       )
     : '';
 

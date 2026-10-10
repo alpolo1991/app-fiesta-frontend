@@ -64,7 +64,8 @@ npm run build   # genera dist/ (debe salir exit 0)
   `America/Bogota`.
 - WhatsApp: todo mensaje lleva el bloque de `bloqueEventoWhatsApp()`
   (nombre, lugar, dirección, fecha/hora y enlace); lugar y dirección salen
-  de la Configuración.
+  de la Configuración. Claves con `mensajeAcceso()` (`*negrita*`, `•`,
+  email solo si visible); ficha con el mismo lenguaje.
 - `AvisoPagos`: banner informativo (no bloquea) en login/registro/soporte
   con `fecha_abono` / `fecha_limite_pago`; sin fechas no renderiza.
 - Póster: lo sube el admin en Configuración; Soporte lo muestra con

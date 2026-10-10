@@ -91,3 +91,23 @@ export function bloqueEventoWhatsApp(config = {}) {
   if (base) lineas.push(`🔗 Ingresa aquí: ${base}/login`);
   return lineas.join('\n');
 }
+
+/**
+ * Mensaje de acceso con clave temporal (reset y registro manual).
+ * Negritas con *doble asterisco* (WhatsApp), datos con • y el bloque
+ * del evento al cierre. Sin email se omite esa línea.
+ */
+export function mensajeAcceso({ nombre, email, clave, intro, config = {} }) {
+  const lineas = [
+    `Hola *${nombre}* 👋`,
+    intro || 'Tu acceso a la fiesta:',
+    '',
+    ...(email ? [`• Usuario: *${email}*`] : []),
+    `• Clave temporal: *${clave}*`,
+    '',
+    'Cámbiala al ingresar.',
+    '',
+    bloqueEventoWhatsApp(config),
+  ];
+  return lineas.join('\n');
+}

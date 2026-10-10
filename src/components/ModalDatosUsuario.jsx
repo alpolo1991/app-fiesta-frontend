@@ -34,15 +34,18 @@ function mensajeFicha(ficha, config = {}) {
   const total = esStaff ? 0 : Number(u.monto_abonado || 0) + Number(u.saldo_pendiente || 0) || 50000 + Number(acomp.total || 0);
   const pendientes = (ficha.soportes || []).filter((s) => s.estado === 'pendiente').length;
   return [
-    `FICHA DE USUARIO — ${u.nombre}`,
-    `Cédula: ${u.cedula} · Email: ${u.email || 'oculto'} · WhatsApp: ${u.whatsapp || 'sin registrar'}`,
-    `Rol: ${ROTULOS[u.rol] || u.rol}${esStaff ? ' (sin saldo a pagar)' : ''}`,
-    `Pago: ${esStaff ? 'Staff sin cargo' : `${est.texto}${u.pago_validado ? ' (validado)' : ' (sin validar)'}`} · Abonado: ${dinero(esStaff ? 0 : u.monto_abonado)} · Total: ${dinero(total)} · Saldo: ${dinero(esStaff ? 0 : u.saldo_pendiente)}`,
+    `*FICHA DE USUARIO — ${u.nombre}*`,
+    '',
+    `• Cédula: *${u.cedula}*`,
+    `• Email: *${u.email || 'oculto'}*`,
+    `• WhatsApp: *${u.whatsapp || 'sin registrar'}*`,
+    `• Rol: *${ROTULOS[u.rol] || u.rol}*${esStaff ? ' (sin saldo a pagar)' : ''}`,
+    `• Pago: *${esStaff ? 'Staff sin cargo' : `${est.texto}${u.pago_validado ? ' (validado)' : ' (sin validar)'}`}* · Abonado: *${dinero(esStaff ? 0 : u.monto_abonado)}* · Total: *${dinero(total)}* · Saldo: *${dinero(esStaff ? 0 : u.saldo_pendiente)}*`,
     acomp.cantidad
-      ? `Acompañantes (${acomp.cantidad}): ${acomp.lista.map((a) => `${a.nombre} (${dinero(a.monto)})`).join(' | ')}`
-      : 'Acompañantes: ninguno',
-    `Combo (${combo.persons} persona(s)): ${(combo.items || []).map((i) => `${i.entregado}/${i.requerido} ${i.producto}`).join(' · ') || 'sin definir'}${u.combo_completado ? ' (completado)' : ''}`,
-    `Encuesta: ${ficha.encuesta.completada ? `respondida el ${fechaLegible(ficha.encuesta.completada_en)}` : 'pendiente'} · Soportes: ${(ficha.soportes || []).length} (${pendientes} pendientes)`,
+      ? `• Acompañantes (${acomp.cantidad}): *${acomp.lista.map((a) => `${a.nombre} (${dinero(a.monto)})`).join(' | ')}*`
+      : '• Acompañantes: ninguno',
+    `• Combo (${combo.persons} persona(s)): *${(combo.items || []).map((i) => `${i.entregado}/${i.requerido} ${i.producto}`).join(' · ') || 'sin definir'}*${u.combo_completado ? ' (completado)' : ''}`,
+    `• Encuesta: *${ficha.encuesta.completada ? `respondida el ${fechaLegible(ficha.encuesta.completada_en)}` : 'pendiente'}* · Soportes: *${(ficha.soportes || []).length} (${pendientes} pendientes)*`,
     '',
     bloqueEventoWhatsApp(config),
   ].join('\n');
