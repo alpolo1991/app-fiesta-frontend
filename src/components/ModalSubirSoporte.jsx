@@ -20,6 +20,7 @@ export default function ModalSubirSoporte({ usuario, abierto, onCerrar, onEnviad
   const [maxMB, setMaxMB] = useState(1);
   const [cargando, setCargando] = useState(false);
   const [enviando, setEnviando] = useState(false);
+  const [pendientes, setPendientes] = useState(0);
 
   useEffect(() => {
     if (!abierto || !usuario?.id) return;
@@ -30,6 +31,10 @@ export default function ModalSubirSoporte({ usuario, abierto, onCerrar, onEnviad
       .get(`/usuarios/${usuario.id}`)
       .then((r) => setSaldo(Number(r.data?.usuario?.saldo_pendiente ?? 0)))
       .catch(() => setSaldo(0));
+    api
+      .get('/soportes-pago', { params: { estado: 'todas', usuario_id: usuario.id } })
+      .then((r) => setPendientes((r.data || []).filter((s) => s.estado === 'pendiente').length))
+      .catch(() => {});
     api
       .get('/configuracion')
       .then((r) => {
@@ -144,6 +149,12 @@ export default function ModalSubirSoporte({ usuario, abierto, onCerrar, onEnviad
               {enviando ? 'Enviando…' : '📤 Subir soporte'}
             </button>
           </div>
+          {pendientes > 0 && (
+            <p className="rounded-xl border border-amber-400/30 bg-amber-500/10 px-3 py-2 text-xs leading-relaxed text-amber-200">
+              ⏳ {usuario?.nombre} tiene {pendientes} soporte(s) pendiente(s): valida primero esos antes de subir otro,
+              o los montos pueden cruzarse.
+            </p>
+          )}
         </form>
       )}
     </Modal>

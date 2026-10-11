@@ -47,6 +47,9 @@ npm run build   # genera dist/ (debe salir exit 0)
   (solo lectura, el usuario no lo edita).
 - Soporte por el usuario: `ModalSubirSoporte` (botón 📤 en fila + modal de
   validar); queda pendiente igual.
+- Soportes: tabs por estado con tarjetas; en Todos hay tabla (filas verde/
+  rojo/amarillo) + sub-filtro cliente. El visor bloquea Aprobar si supera el
+  saldo; avisos de pendientes en subidas (el pago total fija el saldo).
 - UUID visible solo lectura (resultado del registro manual + ficha); jamás
   editable ni enviado al crear.
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.

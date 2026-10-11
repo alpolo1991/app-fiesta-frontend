@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import api, { descargarArchivo, mensajeError, obtenerUrlImagen } from '../api/client';
 import { useToast } from '../context/ToastContext';
 import { dinero, ESTADOS_SOPORTE, fechaLegible } from '../utils';
@@ -19,6 +19,7 @@ export default function SoportesPendientes({ alCambiar }) {
   const [aprobarM, setAprobarM] = useState(null); // soporte a aprobar (motivo opcional)
   const [comentario, setComentario] = useState('');
   const [ocupado, setOcupado] = useState(false);
+  const [subFiltro, setSubFiltro] = useState('todas'); // filtro cliente dentro de Todos
 
   const cargar = useCallback(async () => {
     setCargando(true);
@@ -35,6 +36,22 @@ export default function SoportesPendientes({ alCambiar }) {
   useEffect(() => {
     cargar();
   }, [cargar]);
+
+  useEffect(() => {
+    setSubFiltro('todas');
+  }, [estado]);
+
+  const filtradosTodos = useMemo(
+    () => (subFiltro === 'todas' ? soportes : soportes.filter((s) => s.estado === subFiltro)),
+    [soportes, subFiltro]
+  );
+  const mostrados = estado === 'todas' ? filtradosTodos : soportes;
+  const tintaFila = (est) =>
+    est === 'aprobado'
+      ? 'border-l-2 border-l-emerald-400/60 bg-emerald-500/[0.06]'
+      : est === 'rechazado'
+        ? 'border-l-2 border-l-rose-400/60 bg-rose-500/[0.06]'
+        : 'border-l-2 border-l-amber-400/60 bg-amber-500/[0.06]';
 
   /** Abre el visor cargando la imagen con el JWT + contexto de pago del usuario. */
   const abrirVisor = async (soporte) => {
@@ -114,7 +131,7 @@ export default function SoportesPendientes({ alCambiar }) {
             </button>
           ))}
         </div>
-        <span className="text-xs text-slate-500">{soportes.length} resultado(s)</span>
+        <span className="text-xs text-slate-500">{mostrados.length} resultado(s)</span>
         <button
           type="button"
           className="btn-mini"
@@ -132,15 +149,142 @@ export default function SoportesPendientes({ alCambiar }) {
         </button>
       </div>
 
+      {/* Sub-filtro cliente solo en Todos */}
+      {estado === 'todas' && (
+        <div className="flex flex-wrap gap-2">
+          {[
+            { v: 'todas', t: '🗂️ Todos' },
+            { v: 'pendiente', t: '🟡 Pendientes' },
+            { v: 'aprobado', t: '✅ Aprobados' },
+            { v: 'rechazado', t: '⛔ Rechazados' },
+          ].map((f) => (
+            <button
+              key={f.v}
+              type="button"
+              onClick={() => setSubFiltro(f.v)}
+              className={`tab !px-3 !py-1.5 !text-xs ${subFiltro === f.v ? 'tab-activa' : ''}`}
+            >
+              {f.t}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Lista */}
       {cargando ? (
         <div className="flex justify-center py-10">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/15 border-t-amber-400" />
         </div>
-      ) : soportes.length === 0 ? (
+      ) : mostrados.length === 0 ? (
         <div className="panela p-8 text-center text-sm text-slate-400">
-          🎉 No hay soportes en este estado.
+          🎉 No hay soportes con este filtro.
         </div>
+      ) : estado === 'todas' ? (
+        <>
+          {/* Tabla en compu */}
+          <div className="panela hidden overflow-x-auto md:block">
+            <table className="w-full min-w-[820px]">
+              <thead className="border-b border-white/10 bg-white/[0.03]">
+                <tr>
+                  <th className="th-tabla">Usuario</th>
+                  <th className="th-tabla">Monto</th>
+                  <th className="th-tabla">Tipo</th>
+                  <th className="th-tabla">Estado</th>
+                  <th className="th-tabla">Fecha</th>
+                  <th className="th-tabla">Revisado por</th>
+                  <th className="th-tabla text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {filtradosTodos.map((s) => {
+                  const est = ESTADOS_SOPORTE[s.estado] || ESTADOS_SOPORTE.pendiente;
+                  return (
+                    <tr key={s.id} className={`hover:bg-white/[0.03] ${tintaFila(s.estado)}`}>
+                      <td className="td-tabla">
+                        <p className="font-semibold text-white">{s.usuario_nombre}</p>
+                        <p className="text-xs text-slate-500">C.C. {s.usuario_cedula}</p>
+                      </td>
+                      <td className="td-tabla font-semibold tabular-nums text-white">{dinero(s.monto_reportado)}</td>
+                      <td className="td-tabla capitalize text-slate-400">
+                        {s.tipo === 'pago_total' ? 'Pago total' : 'Abono'}
+                      </td>
+                      <td className="td-tabla">
+                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${est.clase}`}>
+                          {est.texto}
+                        </span>
+                      </td>
+                      <td className="td-tabla whitespace-nowrap text-slate-400">{fechaLegible(s.created_at)}</td>
+                      <td className="td-tabla text-xs text-slate-400">{s.revisado_por_nombre || '—'}</td>
+                      <td className="td-tabla">
+                        <div className="acciones-tabla">
+                          <button type="button" className="btn-mini" onClick={() => abrirVisor(s)} title="Ver imagen" aria-label={`Ver imagen del soporte de ${s.usuario_nombre}`}>
+                            🖼️
+                          </button>
+                          {s.estado === 'pendiente' && (
+                            <>
+                              <button
+                                type="button"
+                                className="btn-mini !text-emerald-300"
+                                disabled={ocupado}
+                                onClick={() => {
+                                  setAprobarM(s);
+                                  setComentario('');
+                                }}
+                                title="Aprobar y acreditar"
+                              >
+                                ✅
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-mini !text-rose-300"
+                                disabled={ocupado}
+                                onClick={() => {
+                                  setRechazar(s);
+                                  setComentario('');
+                                }}
+                                title="Rechazar con comentario"
+                              >
+                                ⛔
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          {/* Tarjetas compactas en teléfono */}
+          <div className="space-y-2.5 md:hidden">
+            {filtradosTodos.map((s) => {
+              const est = ESTADOS_SOPORTE[s.estado] || ESTADOS_SOPORTE.pendiente;
+              return (
+                <article key={s.id} className={`panela space-y-2 border-l-2 p-3.5 ${tintaFila(s.estado)}`}>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="truncate text-sm font-bold text-white">{s.usuario_nombre}</p>
+                    <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold ${est.clase}`}>
+                      {est.texto}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-2">
+                    <p className="font-display text-lg font-extrabold tabular-nums text-white">
+                      {dinero(s.monto_reportado)}{' '}
+                      <span className="text-[10px] font-semibold uppercase text-slate-500">
+                        {s.tipo === 'pago_total' ? 'Pago total' : 'Abono'}
+                      </span>
+                    </p>
+                    <p className="shrink-0 text-[11px] text-slate-500">{fechaLegible(s.created_at)}</p>
+                  </div>
+                  <button type="button" className="btn-mini w-full" onClick={() => abrirVisor(s)}>
+                    🖼️ Ver y gestionar
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        </>
       ) : (
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {soportes.map((s) => {
@@ -281,7 +425,16 @@ export default function SoportesPendientes({ alCambiar }) {
             )}
 
             {visor.soporte.estado === 'pendiente' ? (
-              <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+              <div className="space-y-2">
+                {visor.ficha?.usuario &&
+                  Number(visor.soporte.monto_reportado || 0) > Number(visor.ficha.usuario.saldo_pendiente || 0) && (
+                    <p className="rounded-xl border border-amber-400/30 bg-amber-500/10 px-3.5 py-2.5 text-xs leading-relaxed text-amber-200">
+                      ⚠️ Este soporte ({dinero(visor.soporte.monto_reportado)}) supera el saldo actual (
+                      {dinero(visor.ficha.usuario.saldo_pendiente)}): no se puede aprobar. Recházalo con comentario
+                      o pide uno nuevo.
+                    </p>
+                  )}
+                <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
                 <button type="button" className="btn-peligro" onClick={() => setRechazar(visor.soporte)} disabled={ocupado}>
                   ⛔ Rechazar
                 </button>
@@ -292,10 +445,21 @@ export default function SoportesPendientes({ alCambiar }) {
                     setAprobarM(visor.soporte);
                     setComentario('');
                   }}
-                  disabled={ocupado}
+                  disabled={
+                    ocupado ||
+                    (visor.ficha?.usuario &&
+                      Number(visor.soporte.monto_reportado || 0) > Number(visor.ficha.usuario.saldo_pendiente || 0))
+                  }
+                  title={
+                    visor.ficha?.usuario &&
+                    Number(visor.soporte.monto_reportado || 0) > Number(visor.ficha.usuario.saldo_pendiente || 0)
+                      ? 'Supera el saldo actual: no aprobable'
+                      : `Aprobar ${dinero(visor.soporte.monto_reportado)} y acreditar`
+                  }
                 >
                   {`✅ Aprobar ${dinero(visor.soporte.monto_reportado)} y acreditar`}
                 </button>
+                </div>
               </div>
             ) : (
               <div className="space-y-1 text-right text-sm text-slate-400">

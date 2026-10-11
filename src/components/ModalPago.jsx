@@ -23,6 +23,7 @@ export default function ModalPago({ abierto, onCerrar, usuario, onEnviado }) {
   const [maxMB, setMaxMB] = useState(1);
   const maxArchivo = maxMB * 1024 * 1024;
   const etiquetaMax = `${maxMB} MB`;
+  const [pendientes, setPendientes] = useState(0);
 
   const saldo = Number(usuario?.saldo_pendiente ?? 0);
   const yaPagado = saldo <= 0;
@@ -48,6 +49,11 @@ export default function ModalPago({ abierto, onCerrar, usuario, onEnviado }) {
         const n = Number(r.data?.tamano_max_imagen_mb);
         if (!isNaN(n) && n > 0 && n <= 3) setMaxMB(n);
       })
+      .catch(() => {});
+    // Aviso si ya hay pendientes (el pago total fija el saldo actual).
+    api
+      .get('/soportes-pago/mios')
+      .then((r) => setPendientes((r.data || []).filter((s) => s.estado === 'pendiente').length))
       .catch(() => {});
   }, [abierto, notificar]);
 
@@ -175,6 +181,12 @@ export default function ModalPago({ abierto, onCerrar, usuario, onEnviado }) {
         📌 <strong>Copia el número de UNA opción y paga.</strong> Luego sube el soporte aquí abajo para que el admin o
         moderador lo valide.
       </p>
+      {!yaPagado && pendientes > 0 && (
+        <p className="mt-3 rounded-xl border border-amber-400/30 bg-amber-500/10 px-3.5 py-2.5 text-xs leading-relaxed text-amber-200">
+          ⏳ Tienes {pendientes} soporte(s) pendiente(s) de validación: espera a que se revisen antes de subir otro,
+          o los montos pueden cruzarse.
+        </p>
+      )}
 
       {yaPagado ? (
         <div className="mt-4 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-center text-sm font-semibold text-emerald-300">
