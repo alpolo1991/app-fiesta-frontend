@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import TarjetaKPI from '../components/TarjetaKPI';
 import Modal from '../components/Modal';
-import { dinero } from '../utils';
+import { dinero, fechaLegible } from '../utils';
 
 const CATEGORIAS = { bebida: '🍺 Bebida', comida: '🍽️ Comida', otro: '📦 Otro' };
 
@@ -424,7 +424,7 @@ export default function Inventario({ alCambiar }) {
               ) : (
                 movimientos.map((m) => (
                   <tr key={m.id} className="hover:bg-white/[0.03]">
-                    <td className="td-tabla whitespace-nowrap text-slate-400">{m.created_at}</td>
+                    <td className="td-tabla whitespace-nowrap text-slate-400">{fechaLegible(m.created_at)}</td>
                     <td className="td-tabla font-semibold text-white">{m.producto}</td>
                     <td className="td-tabla">
                       <span
@@ -470,7 +470,7 @@ export default function Inventario({ alCambiar }) {
                   </span>
                 </div>
                 <p className="break-words text-xs text-slate-400">{m.motivo || '—'}</p>
-                <p className="text-[11px] text-slate-500">{m.created_at} · {m.usuario_nombre || '—'}</p>
+                <p className="text-[11px] text-slate-500">{fechaLegible(m.created_at)} · {m.usuario_nombre || '—'}</p>
               </article>
             ))
           )}
