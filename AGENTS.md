@@ -50,6 +50,7 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Soportes: tabs por estado con tarjetas; en Todos hay tabla (filas verde/
   rojo/amarillo) + sub-filtro cliente. El visor bloquea Aprobar si supera el
   saldo; avisos de pendientes en subidas (el pago total fija el saldo).
+- Perfil muestra `⏳ Por validar`; los totales incluyen lo pendiente.
 - UUID visible solo lectura (resultado del registro manual + ficha); jamás
   editable ni enviado al crear.
 - Toasts: `useToast().notificar(mensaje, 'exito'|'error'|'info')`.

@@ -392,7 +392,7 @@ export default function SoportesPendientes({ alCambiar }) {
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-slate-500">Total</p>
                     <p className="font-bold tabular-nums text-white">
-                      {dinero(Number(visor.ficha.usuario.monto_abonado || 0) + Number(visor.ficha.usuario.saldo_pendiente || 0) || 50000 + Number(visor.ficha.usuario.total_acompanantes || 0))}
+                      {dinero(Number(visor.ficha.usuario.monto_abonado || 0) + Number(visor.ficha.usuario.saldo_pendiente || 0) + Number(visor.ficha.usuario.monto_pendiente || 0) || 50000 + Number(visor.ficha.usuario.total_acompanantes || 0))}
                     </p>
                   </div>
                   <div>
@@ -414,9 +414,9 @@ export default function SoportesPendientes({ alCambiar }) {
                 </div>
                 {visor.soporte.estado === 'pendiente' && (
                   <p className="mt-2 text-center text-xs text-sky-200">
-                    Al aprobar {dinero(visor.soporte.monto_reportado)} el saldo queda en{' '}
+                    Al aprobar se confirma (el saldo ya lo descuenta) y queda en{' '}
                     <strong className="tabular-nums">
-                      {dinero(Math.max(0, Number(visor.ficha.usuario.saldo_pendiente || 0) - Number(visor.soporte.monto_reportado || 0)))}
+                      {dinero(Number(visor.ficha.usuario.saldo_pendiente || 0))}
                     </strong>
                     .
                   </p>

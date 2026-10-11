@@ -200,6 +200,12 @@ export default function Perfil() {
               <dt className="text-slate-400">Abonado</dt>
               <dd className="font-semibold text-emerald-300">{dinero(abonado)}</dd>
             </div>
+            {Number(usuario.monto_pendiente || 0) > 0 && (
+              <div className="flex justify-between">
+                <dt className="text-slate-400">⏳ Por validar</dt>
+                <dd className="font-semibold text-sky-300">{dinero(usuario.monto_pendiente)}</dd>
+              </div>
+            )}
             <div className="flex justify-between border-t border-white/10 pt-1.5">
               <dt className="text-slate-400">Saldo pendiente</dt>
               <dd className="font-bold text-amber-300">{dinero(saldo)}</dd>
