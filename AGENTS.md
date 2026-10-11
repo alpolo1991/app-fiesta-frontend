@@ -53,7 +53,8 @@ npm run build   # genera dist/ (debe salir exit 0)
 - Modales con `role="dialog"`, cierre con Escape y clic fuera.
 - Entregas: botones `+1` deshabilitados si rol usuario y
   `estado_pago !== 'pagado'` (staff exento); sin botón manual (el combo se
-  auto-completa al entregar todo y muestra `✅ Combo entregado`). Totales
+  auto-completa al entregar todo y muestra `✅ Combo entregado`). Combo fijo
+  (`combo_cerveza` + `combo_comida` en Configuración, solo admin). Totales
   siempre desde backend (`monto_abonado + saldo_pendiente`), nunca `50000` fijo.
 - KPI Pagados (admin/mod): total personas confirmadas =
   `ganancias.inscripcionesConfirmadas + ganancias.acompanantesConfirmados`.

@@ -15,7 +15,7 @@ const ETIQUETA_ROL = { admin: '🛡️ Admin', moderador: '🧑‍⚖️ Moderad
 
 /**
  * Vista de entregas (admin y moderador).
- * Combo por producto (cerveza ×4 y comida ×1 por persona).
+ * Combo fijo por usuario desde la config (combo_cerveza + combo_comida).
  * Buscador + entrega por producto. El combo se completa solo al entregar
  * todo lo requerido (sin botón manual).
  * Al staff se le etiqueta por rol (no pagan suscripción).
@@ -148,7 +148,7 @@ export default function Entregas({ alCambiar }) {
                       </p>
                       {Number(u.n_acompanantes) > 0 && (
                         <p className="mt-0.5 text-[11px] font-semibold text-sky-300" title={`Acompañantes: ${u.nombres_acompanantes || ''}`}>
-                          👥 +{u.n_acompanantes} acompañante(s) · {u.combo_personas} persona(s)
+                          👥 +{u.n_acompanantes} acompañante(s) · 🎁 {u.combo_total ?? '?'} uds. fijas
                         </p>
                       )}
                       {!u.combo_reservado && (u.combo_items || []).length > 0 && (
@@ -285,7 +285,7 @@ export default function Entregas({ alCambiar }) {
                     <p className="truncate font-semibold text-white">{u.nombre}</p>
                     <p className="truncate text-xs text-slate-500">C.C. {u.cedula}</p>
                     {Number(u.n_acompanantes) > 0 && (
-                      <p className="text-[11px] font-semibold text-sky-300">👥 +{u.n_acompanantes} · {u.combo_personas} persona(s)</p>
+                      <p className="text-[11px] font-semibold text-sky-300">👥 +{u.n_acompanantes} · 🎁 {u.combo_total ?? '?'} uds. fijas</p>
                     )}
                   </div>
                   {esStaff ? (
