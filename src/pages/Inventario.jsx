@@ -69,6 +69,7 @@ export default function Inventario({ alCambiar }) {
   const valorStock = productos.reduce((acc, p) => acc + p.cantidad_disponible * p.precio_unitario, 0);
   const combo = productos.filter((p) => Number(p.combo_por_persona) > 0);
   const unidadesCombo = combo.reduce((acc, p) => acc + Number(p.cantidad_disponible || 0), 0);
+  const unidadesReservadas = productos.reduce((acc, p) => acc + Number(p.cantidad_reservada || 0), 0);
   const vendido = datos.vendido ?? 0;
   const vendidoHoy = datos.vendido_hoy ?? 0;
 
@@ -248,7 +249,7 @@ export default function Inventario({ alCambiar }) {
           titulo="Disponibles"
           icono="🎲"
           valor={datos.totales?.disponibles ?? 0}
-          subtitulo={`${datos.totales?.entregados ?? 0} entregados`}
+          subtitulo={`${datos.totales?.entregados ?? 0} entregados · ${unidadesReservadas} reservados`}
           color="esmeralda"
         />
         <TarjetaKPI
@@ -342,6 +343,9 @@ export default function Inventario({ alCambiar }) {
                           <span className="ml-1 text-xs text-amber-300">· combo ×{p.combo_por_persona}</span>
                         )}
                       </p>
+                      {Number(p.cantidad_reservada) > 0 && (
+                        <p className="text-[11px] text-sky-300">📦 {p.cantidad_reservada} reservadas</p>
+                      )}
                     </td>
                     <td className="td-tabla text-slate-400">{CATEGORIAS[p.categoria] || p.categoria}</td>
                     <td className="td-tabla font-semibold text-slate-200">{dinero(p.precio_unitario)}</td>
@@ -388,6 +392,7 @@ export default function Inventario({ alCambiar }) {
                 </div>
                 <p className="text-xs text-slate-500">
                   Total {p.cantidad_total} · Entregados {p.cantidad_entregada}
+                  {Number(p.cantidad_reservada) > 0 && <span className="text-sky-300"> · 📦 {p.cantidad_reservada} reservadas</span>}
                 </p>
                 <AccionesProd p={p} vertical />
               </article>
@@ -550,7 +555,7 @@ export default function Inventario({ alCambiar }) {
             <label className="etiqueta">Motivo (obligatorio)</label>
             <input
               className="campo"
-              placeholder="Ej: conteo físico inicial"
+              placeholder="Ej: conteo inicial según reservas"
               maxLength={200}
               value={fAjuste.motivo}
               onChange={(e) => setFAjuste((f) => ({ ...f, motivo: e.target.value }))}

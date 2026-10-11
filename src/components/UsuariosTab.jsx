@@ -451,6 +451,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
                       ) : (
                         <span className="text-xs text-slate-400" title="Ver detalle en Entregas">
                           🎁 {(u.cervezas_entregadas || 0) + (u.comidas_entregadas || 0)} entregados
+                          {u.combo_reservado ? ' · 📦' : ''}
                         </span>
                       )}
                     </td>
@@ -524,7 +525,7 @@ export default function UsuariosTab({ modo = 'admin', alCambiar }) {
                   <span className="text-slate-400">
                     {u.combo_completado
                       ? '✅ Combo completo'
-                      : `🎁 ${(u.cervezas_entregadas || 0) + (u.comidas_entregadas || 0)} entregados`}
+                      : `🎁 ${(u.cervezas_entregadas || 0) + (u.comidas_entregadas || 0)} entregados${u.combo_reservado ? ' · 📦' : ''}`}
                   </span>
                 </div>
                 <Botones u={u} esStaffFila={esStaff} vertical />
