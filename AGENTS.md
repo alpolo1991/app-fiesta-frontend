@@ -80,6 +80,7 @@ npm run build   # genera dist/ (debe salir exit 0)
   nunca concatenar `baseURL` a mano.
 - Imágenes: el límite lo define el admin (`tamano_max_imagen_mb`, hasta 3 MB);
   `ModalPago` y QR lo leen de `/configuracion` (default 1 MB).
+- Rama exp/reserva-v2: muestra el estado de reserva (📦) que `main` no pinta.
 - Para probar la UI sin tocar datos reales: backend temporal
   (`FIESTA_DB_PATH`/`FIESTA_UPLOADS_DIR` en `/tmp`, otro puerto) y Vite con
   `VITE_API_TARGET` a ese backend.

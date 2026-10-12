@@ -151,6 +151,11 @@ export default function Entregas({ alCambiar }) {
                           👥 +{u.n_acompanantes} acompañante(s) · 🎁 {u.combo_total ?? '?'} uds. en total
                         </p>
                       )}
+                      {!u.combo_reservado && (u.combo_items || []).length > 0 && (
+                        <p className="mt-0.5 text-[11px] text-slate-500" title="Stock aún no reservado">
+                          📦 Sin reserva de stock
+                        </p>
+                      )}
                     </td>
                     <td className="td-tabla">
                       {esStaff ? (
